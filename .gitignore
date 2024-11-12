@@ -1,0 +1,23 @@
+# Ignore Python virtual environments in any directory
+**/venv/
+**/.venv/
+**/env/
+**/.env/
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Ignore VS Code specific files
+.vscode/
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+
+# Ignore JetBrains IDEs (e.g., PyCharm) specific files
+.idea/
+*.iml
+*.iws
+*.ipr
