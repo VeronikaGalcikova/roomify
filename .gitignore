@@ -3,6 +3,7 @@
 **/.venv/
 **/env/
 **/.env/
+**.env
 
 # Ignore Python cache files
 __pycache__/
@@ -21,3 +22,7 @@ __pycache__/
 *.iml
 *.iws
 *.ipr
+
+# Ignore db files
+/data/backend_db/*
+!/data/backend_db/.gitkeep
