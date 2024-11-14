@@ -17,8 +17,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+
+from core.views import error404
+
+handler404 = error404
+handler500 = 'rest_framework.exceptions.server_error'
+handler400 = 'rest_framework.exceptions.bad_request'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('room_reader.urls')),
     path('api/', include('card.urls')),
+    path('api/', include('authentication.urls')),
 ]

@@ -1,10 +1,11 @@
 from django.db import models
+import uuid
 
 from card.models import Card
 from core import settings
 
 class RoomReader(models.Model):
-    uid = models.UUIDField(primary_key=True, editable=False, unique=True)
+    uid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=100)
     ip = models.GenericIPAddressField()
     reader_state = models.BooleanField(default=True)
