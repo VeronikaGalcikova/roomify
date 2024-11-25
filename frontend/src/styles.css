@@ -9,3 +9,72 @@ body, html {
     box-sizing: border-box;
     font-family: Arial, sans-serif;
   }
+
+  
+  
+  /* Layout container */
+  .layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Full viewport height */
+  }
+  
+  /* Center the content */
+  main {
+    flex: 1; /* Ensures main takes up available space */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1em;
+  }
+  
+  /* Content width */
+  main > * {
+    max-width: 800px; /* Limit the width of the main content */
+    width: 100%;
+  }
+
+  router-outlet {
+    display: block;
+    width: 100%; /* Ensure it inherits the parent width */
+  }
+
+  .layout {
+    width: 100%; /* Ensure it fills the viewport width */
+  }
+  
+  /* Header and footer styles */
+  header {
+    background-color: #007bff;
+    color: white;
+    padding: 1em;
+    text-align: center;
+  }
+  
+  footer {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    text-align: center;
+    padding: 0.5em;
+    border-top: 1px solid #e9ecef;
+  }
+
+
+  /* NAVIGATION */
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    padding: 0.5em;
+  }
+  
+  nav a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+  }
+  
+  nav a.active {
+    text-decoration: underline;
+  }  
+  
