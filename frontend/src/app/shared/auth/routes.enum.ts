@@ -1,4 +1,4 @@
 export enum AuthRoutes {
-    REGISTRATION = 'api/registration',
-    LOGIN = 'api/token',
+  REGISTRATION = 'api/register',
+  LOGIN = 'api/token',
 }
