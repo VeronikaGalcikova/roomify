@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { routes } from './app.routes';
-import { tokenInterceptor } from './services/token.interceptor';
+import { tokenInterceptor } from './core/token.interceptor';
 
 export const API_URL = new InjectionToken<string>('apiUrl', {
   providedIn: 'root',

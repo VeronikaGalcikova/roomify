@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ILoginDto, ILoginResponse } from '../shared/auth/login.interface';
-import { AuthRoutes } from '../shared/auth/routes.enum';
-import { API_URL } from '../app.config';
+import { ILoginDto, ILoginResponse } from '../../shared/auth/login.interface';
+import { AuthRoutes } from '../../shared/auth/routes.enum';
+import { API_URL } from '../../app.config';
 
 export interface AuthResponse {
   token: string;

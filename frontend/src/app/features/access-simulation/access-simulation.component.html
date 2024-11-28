@@ -1,0 +1,46 @@
+<div class="simulation-container">
+  <!-- Cards and Room Readers Section -->
+  <div class="simulation-content">
+    <!-- Cards Section -->
+    <div class="section-container card-section">
+      <div class="section-header">
+        <h2>Cards</h2>
+      </div>
+      <div class="cards-container">
+        <div
+          *ngFor="let card of cards"
+          class="card"
+          [ngClass]="{ 'allowed': card.allowed, 'not-allowed': !card.allowed }"
+          draggable="true"
+          (dragstart)="onDragStart($event, card)"
+        >
+          <div class="card-content">
+            <h3>{{ card.card_id }}</h3>
+            <p>Status: {{ card.allowed ? 'Allowed' : 'Not Allowed' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Room Readers Section -->
+    <div class="section-container room-reader-section">
+      <div class="section-header">
+        <h2>Room Readers</h2>
+      </div>
+      <div class="room-readers-container">
+        <div
+          *ngFor="let reader of roomReaders"
+          class="room-reader"
+          (dragover)="onDragOver($event)"
+          (drop)="onDrop($event, reader)"
+        >
+          <div class="room-reader-content">
+            <h3>{{ reader.name }}</h3>
+            <p>IP: {{ reader.ip }}</p>
+            <p>Status: {{ reader.reader_state ? 'Active' : 'Inactive' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

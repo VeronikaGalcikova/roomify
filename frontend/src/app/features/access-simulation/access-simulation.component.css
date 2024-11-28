@@ -1,0 +1,122 @@
+/* Overall Container */
+.simulation-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 32px;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 32px 16px;
+  background-color: #f4f7fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Wrapper for cards and room readers */
+.simulation-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  flex: auto;
+}
+
+
+/* Section Container */
+.section-container {
+  background-color: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px; /* Limit the width of each section */
+}
+
+/* Section Header */
+.section-header {
+  margin-bottom: 16px;
+  border-bottom: 2px solid #ececec;
+  padding-bottom: 8px;
+}
+
+.section-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+/* Cards Container */
+.cards-container,
+.room-readers-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* Card */
+.card,
+.room-reader {
+  width: 220px;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #fff;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.card:hover,
+.room-reader:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Card States */
+.card.allowed {
+  background-color: #d1f7d1;
+  border: 1px solid #a5d6a7;
+  color: #388e3c;
+}
+
+.card.not-allowed {
+  background-color: #fbe9e7;
+  border: 1px solid #f0a8a3;
+  color: #d32f2f;
+}
+
+/* Room Reader Styles */
+.room-reader {
+  background-color: #e0e0e0;
+  border: 1px solid #bdbdbd;
+  color: #333;
+}
+
+.room-reader.active {
+  background-color: #b3e5fc;
+  border: 1px solid #81d4fa;
+  color: #0288d1;
+}
+
+.room-reader.inactive {
+  background-color: #ffccbc;
+  border: 1px solid #ff8a65;
+  color: #d32f2f;
+}
+
+.room-reader-content {
+  padding: 10px;
+}
+
+.room-reader h3 {
+  margin: 0 0 8px;
+  font-size: 1.2rem;
+}
+
+.room-reader p {
+  margin: 4px 0;
+  font-size: 1rem;
+  color: #777;
+}
