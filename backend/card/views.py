@@ -3,10 +3,14 @@ from card.serializers import CardSerializer
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from core.permissions import IsSuperUserOrReadOnly
 
 
 class CardViewSet(viewsets.ModelViewSet):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsSuperUserOrReadOnly]
+
     queryset = Card.objects.all()
     serializer_class = CardSerializer
     

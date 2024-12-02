@@ -1,17 +1,17 @@
 from authentication.serializers import RegisterSerializer, UserSerializer, CustomTokenObtainPairSerializer
 from rest_framework import viewsets
 from django.contrib.auth.models import User
-from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.views import TokenObtainPairView
+from core.permissions import IsSuperUserOnly
 
 
 class UserViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsSuperUserOnly]
     
     queryset = User.objects.all()
     serializer_class = UserSerializer
