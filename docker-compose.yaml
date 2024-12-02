@@ -26,3 +26,12 @@ services:
       - db
     env_file:
       - .env
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
