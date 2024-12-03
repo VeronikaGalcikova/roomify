@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ILoginDto, ILoginResponse } from '../../shared/auth/login.interface';
 import { AuthRoutes } from '../../shared/auth/routes.enum';
 import { API_URL } from '../../app.config';
+import { IRegistrationDto, IRegistrationResponse } from '../../shared/auth/registration.interface';
 
 export interface AuthResponse {
   token: string;
@@ -35,6 +36,16 @@ export class AuthService {
     });
 
     return response;
+  }
+
+  register(
+    registrationDto: IRegistrationDto
+  ): Observable<IRegistrationResponse> {
+    const registrationUrl = `${this.apiUrl}${AuthRoutes.REGISTRATION}/`;
+    return this.http.post<IRegistrationResponse>(
+      registrationUrl,
+      registrationDto
+    );
   }
 
   logout() {
