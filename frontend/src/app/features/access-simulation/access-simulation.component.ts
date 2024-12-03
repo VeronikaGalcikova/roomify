@@ -5,6 +5,7 @@ import { ICard, IFindCardsByUserResponse } from '../../shared/card/find-cards-by
 import { CommonModule } from '@angular/common';
 import { RoomReaderService } from '../../services/room-reader/room-reader.service';
 import { IRoomReader } from '../../shared/room-reader/get-all-users.interface';
+import { AccessService } from '../../services/access/access.service';
 
 @Component({
   selector: 'app-access-simulation',
@@ -22,7 +23,8 @@ export class AccessSimulationComponent {
 
   constructor(
     private cardService: CardService,
-    private roomReaderService: RoomReaderService
+    private roomReaderService: RoomReaderService,
+    private accessService: AccessService,
   ) {}
 
   ngOnInit(): void {
@@ -70,23 +72,39 @@ export class AccessSimulationComponent {
     }
   }
 
-  // Event handler for drag start
   onDragStart(event: DragEvent, card: ICard): void {
-    this.draggedCardId = card.card_id;  // Save the card id for later reference
-    event.dataTransfer?.setData('text', card.card_id); // Set the dragged card's ID in dataTransfer
+    this.draggedCardId = card.uid;
+    event.dataTransfer?.setData('text', card.card_id);
   }
 
-  // Allow the drop action on room readers
   onDragOver(event: DragEvent): void {
-    event.preventDefault();  // Necessary to allow a drop
+    event.preventDefault();
   }
 
-  // Handle the drop event on a room reader
   onDrop(event: DragEvent, reader: IRoomReader): void {
     event.preventDefault();
     if (this.draggedCardId) {
       console.log(`Card with ID "${this.draggedCardId}" dropped on Reader "${reader.name}"`);
-      // You can add further logic here, such as updating the state of the reader or the card
+      this.accessService
+        .verify({
+          card: this.draggedCardId,
+          room_reader: reader.uid,
+        })
+        .subscribe({
+          next: (response) => {
+            console.log('Access verified successfully!', response);
+            if (response.access) {
+              alert('Access Granted!');
+            } else {
+              alert('Access Denied!');
+            }
+          },
+          error: (error) => {
+            console.error('Access verification failed!', error);
+            alert('Access Denied!');
+            this.errorMessages.push('Access verification failed!');
+          },
+        });
     }
   }
 }

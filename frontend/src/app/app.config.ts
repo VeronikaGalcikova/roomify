@@ -10,11 +10,17 @@ export const API_URL = new InjectionToken<string>('apiUrl', {
   factory: () => "http://localhost:8000/",
 });
 
+export const ROOM_READER_URL = new InjectionToken<string>('apiUrl', {
+  providedIn: 'root',
+  factory: () => "http://localhost:5000/",
+});
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     { provide: API_URL, useValue: "http://localhost:8000/" },
+    { provide: ROOM_READER_URL, useValue: "http://localhost:5000/" },
     provideHttpClient(
       withInterceptors([tokenInterceptor]),
     )
