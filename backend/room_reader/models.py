@@ -19,10 +19,10 @@ class UserAgreement(models.Model):
     access = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = ('card_id', 'room_reader')
+        unique_together = ('card', 'room_reader')
 
     def __str__(self):
-        return f"Agreement for Card {self.card_id} in {self.room_reader}"
+        return f"Agreement for Card {self.card} in {self.room_reader}"
     
     
 class RoomEntryLog(models.Model):

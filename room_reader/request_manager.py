@@ -50,10 +50,14 @@ class RequestManager:
 
     def login(self):
         """Perform a login request to obtain token and store it to session."""
+        print(f"{self.base_url}{current_app.config.get('LOGIN_URL')}",
+              {"username": current_app.config.get("ROOM_READER_USER"),
+               "password": current_app.config.get("ROOM_READER_PASSWORD")})
         response = self.session.request("POST",
                                         f"{self.base_url}{current_app.config.get('LOGIN_URL')}",
                                         json={"username": current_app.config.get("ROOM_READER_USER"),
                                               "password": current_app.config.get("ROOM_READER_PASSWORD")})
+        print(response.json())
         # Store the token
         session[current_app.config.get("ACCESS_TOKEN_KEY")] = response.json().get("access", "")
 

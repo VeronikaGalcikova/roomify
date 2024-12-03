@@ -14,13 +14,13 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='useragreement',
-            name='card_id',
+            name='card',
             field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='agreements', to='card.card'),
             preserve_default=False,
         ),
         migrations.AlterUniqueTogether(
             name='useragreement',
-            unique_together={('card_id', 'room_reader')},
+            unique_together={('card', 'room_reader')},
         ),
         migrations.RemoveField(
             model_name='useragreement',
