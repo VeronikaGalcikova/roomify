@@ -1,1 +1,123 @@
-<p>registration works!</p>
+<div class="registration-container">
+  <div class="registration-card">
+    <h1>Create account</h1>
+    <form (ngSubmit)="onSubmit(registrationForm)" #registrationForm="ngForm">
+      <div class="form-content">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            [(ngModel)]="username"
+            name="username"
+            #usernameCtrl="ngModel"
+            required
+            minlength="3"
+            placeholder="Enter a username"
+          />
+          <div [ngStyle]="{ 'visibility': (usernameCtrl.invalid && usernameCtrl.touched) ? 'visible' : 'hidden' }" class="error">
+            <small *ngIf="usernameCtrl.errors?.['required']">Username is required.</small>
+            <small *ngIf="usernameCtrl.errors?.['minlength']">The minimum length is 3 characters.</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            [(ngModel)]="password"
+            name="password"
+            #passwordCtrl="ngModel"
+            required
+            minlength="6"
+            placeholder="Enter a password"
+          />
+          <div [ngStyle]="{ 'visibility': (passwordCtrl.invalid && passwordCtrl.touched) ? 'visible' : 'hidden' }" class="error">
+            <small *ngIf="passwordCtrl.errors?.['required']">Password is required.</small>
+            <small *ngIf="passwordCtrl.errors?.['minlength']">The minimum password length is 6 characters.</small>
+          </div>
+          
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            #confirmPasswordCtrl="ngModel"
+            required
+            placeholder="Confirm your password"
+          />
+          <div [ngStyle]="{ 'visibility': (confirmPasswordCtrl.invalid && confirmPasswordCtrl.touched) || passwordMismatch ? 'visible' : 'hidden' }" class="error">
+            <small *ngIf="confirmPasswordCtrl.invalid && confirmPasswordCtrl.touched">Password confirmation is required.</small>
+            <small *ngIf="passwordMismatch && confirmPasswordCtrl.touched">Passwords do not match.</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            [(ngModel)]="email"
+            name="email"
+            #emailCtrl="ngModel"
+            required
+            email
+            placeholder="Enter your email"
+          />
+          <div [ngStyle]="{ 'visibility': (emailCtrl.invalid && emailCtrl.touched) ? 'visible' : 'hidden' }" class="error">
+            <small *ngIf="emailCtrl.errors?.['required']">Email is required.</small>
+            <small *ngIf="emailCtrl.errors?.['email']">Invalid email format.</small>
+          </div>
+          
+        </div>
+
+        <div class="form-group">
+          <label for="first_name">Name</label>
+          <input
+            type="text"
+            id="first_name"
+            [(ngModel)]="first_name"
+            name="first_name"
+            #firstNameCtrl="ngModel"
+            required
+            placeholder="Enter your name"
+          />
+          <div [ngStyle]="{ 'visibility': (firstNameCtrl.invalid && firstNameCtrl.touched) ? 'visible' : 'hidden' }" class="error">
+            <small>Name is required.</small>
+          </div>          
+        </div>
+
+        <div class="form-group">
+          <label for="last_name">Surname</label>
+          <input
+            type="text"
+            id="last_name"
+            [(ngModel)]="last_name"
+            name="last_name"
+            #lastNameCtrl="ngModel"
+            required
+            placeholder="Enter your surname"
+          />
+          <div [ngStyle]="{ 'visibility': (lastNameCtrl.invalid && lastNameCtrl.touched) ? 'visible' : 'hidden' }" class="error">
+            <small>Surname is required.</small>
+          </div>          
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="registrationForm.invalid || passwordMismatch"
+      >
+        Create account
+      </button>
+    </form>
+    <div class="registration-links">
+      <a routerLink="/login">Already have an account? Log in</a>
+    </div>
+  </div>
+</div>
