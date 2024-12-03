@@ -1,0 +1,59 @@
+<h1>Rooms Management</h1>
+
+<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+<div *ngIf="successMessage" class="success">{{ successMessage }}</div>
+
+<!-- Add Room Reader Button -->
+<button (click)="initiateAdd()">Add New Room Reader</button>
+
+<!-- Room Readers Table -->
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>IP Address</th>
+      <th>State</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let reader of roomReaders">
+      <td>{{ reader.name }}</td>
+      <td>{{ reader.ip }}</td>
+      <td>{{ reader.reader_state ? "Active" : "Inactive" }}</td>
+      <td>
+        <button (click)="initiateEdit(reader)">Edit</button>
+        <button (click)="deleteRoomReader(reader.uid)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Add/Edit Room Reader Form -->
+<div *ngIf="selectedRoomReader">
+  <h2>{{ isEditing ? "Edit Room Reader" : "Add Room Reader" }}</h2>
+  <form
+    (ngSubmit)="
+      isEditing ? updateRoomReader() : createRoomReader(selectedRoomReader)
+    "
+  >
+    <label>Name:</label>
+    <input [(ngModel)]="selectedRoomReader.name" name="name" required />
+
+    <label>IP Address:</label>
+    <input [(ngModel)]="selectedRoomReader.ip" name="ip" required />
+
+    <label>State:</label>
+    <select
+      [(ngModel)]="selectedRoomReader.reader_state"
+      name="reader_state"
+      required
+    >
+      <option [ngValue]="true">Active</option>
+      <option [ngValue]="false">Inactive</option>
+    </select>
+
+    <button type="submit">{{ isEditing ? "Update" : "Create" }}</button>
+    <button type="button" (click)="cancelEdit()">Cancel</button>
+  </form>
+</div>

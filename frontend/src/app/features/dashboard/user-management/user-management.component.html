@@ -1,0 +1,64 @@
+<h1>User Management</h1>
+<p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+<!-- Add User Button -->
+<button (click)="initiateAddUser()">Add New User</button>
+
+<!-- Users Table -->
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Email</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{ user.id }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.first_name }}</td>
+      <td>{{ user.last_name }}</td>
+      <td>
+        <button (click)="editUser(user)">Edit</button>
+        <button (click)="deleteUser(user.id)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Add/Edit User Form -->
+<div *ngIf="isEditing || selectedUser">
+  <h2 *ngIf="!isEditing">Add User</h2>
+  <h2 *ngIf="isEditing">Edit User</h2>
+  <form (ngSubmit)="isEditing ? updateUser() : addUser(selectedUser!)">
+    <label>Username:</label>
+    <input [(ngModel)]="selectedUser!.username" name="username" required />
+
+    <label>First Name:</label>
+    <input [(ngModel)]="selectedUser!.first_name" name="first_name" required />
+
+    <label>Last Name:</label>
+    <input [(ngModel)]="selectedUser!.last_name" name="last_name" required />
+
+    <label>Email:</label>
+    <input [(ngModel)]="selectedUser!.email" name="email" required />
+
+    <label>Password:</label>
+    <input
+      [(ngModel)]="selectedUser!.password"
+      name="password"
+      type="password"
+      required
+    />
+
+    <button type="submit">
+      {{ isEditing ? "Update User" : "Add User" }}
+    </button>
+    <button type="button" (click)="cancelEdit()">Cancel</button>
+  </form>
+</div>

@@ -1,80 +1,89 @@
 * {
-    font-family: 'Poppins', sans-serif;
-  }
+  font-family: "Poppins", sans-serif;
+}
 
-  /* General reset */
-body, html {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-  }
+/* General reset */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
 
-  
-  
-  /* Layout container */
-  .layout {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Full viewport height */
-  }
-  
-  /* Center the content */
-  main {
-    flex: 1; /* Ensures main takes up available space */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1em;
-  }
-  
-  /* Content width */
-  main > * {
-    max-width: 800px; /* Limit the width of the main content */
-    width: 100%;
-  }
+/* Layout container */
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Full viewport height */
+}
 
-  router-outlet {
-    display: block;
-    width: 100%; /* Ensure it inherits the parent width */
-  }
+/* Center the content */
+main {
+  flex: 1; /* Ensures main takes up available space */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+}
 
-  .layout {
-    width: 100%; /* Ensure it fills the viewport width */
-  }
-  
-  /* Header and footer styles */
-  header {
-    background-color: #007bff;
-    color: white;
-    padding: 1em;
-    text-align: center;
-  }
-  
-  footer {
-    background-color: #f8f9fa;
-    color: #6c757d;
-    text-align: center;
-    padding: 0.5em;
-    border-top: 1px solid #e9ecef;
-  }
+/* Content width */
+main > * {
+  max-width: 800px; /* Limit the width of the main content */
+  width: 100%;
+}
 
+router-outlet {
+  display: block;
+  width: 100%; /* Ensure it inherits the parent width */
+}
 
-  /* NAVIGATION */
-  nav {
-    display: flex;
-    justify-content: center;
-    gap: 1em;
-    padding: 0.5em;
-  }
-  
-  nav a {
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-  }
-  
-  nav a.active {
-    text-decoration: underline;
-  }  
-  
+.layout {
+  width: 100%; /* Ensure it fills the viewport width */
+}
+
+/* Header and footer styles */
+header {
+  background-color: #007bff;
+  color: white;
+  padding: 1em;
+  text-align: center;
+}
+
+footer {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  text-align: center;
+  padding: 0.5em;
+  border-top: 1px solid #e9ecef;
+}
+
+/* NAVIGATION */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+  padding: 0.5em;
+}
+
+nav a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+nav a.active {
+  text-decoration: underline;
+}
+
+/* Success SnackBar */
+.snackbar-success {
+  background-color: #4caf50; /* Green */
+  color: #fff;
+}
+
+/* Error SnackBar */
+.snackbar-error {
+  background-color: #f44336; /* Red */
+  color: #fff;
+}
