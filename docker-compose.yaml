@@ -26,3 +26,24 @@ services:
       - db
     env_file:
       - .env
+
+  room-reader:
+    build:
+      context: ./room_reader
+    container_name: room_reader
+    command: python main.py
+    ports:
+      - "5000:5000"
+    depends_on:
+      - backend
+    env_file:
+      - .env
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend

@@ -1,3 +1,9 @@
+.container {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
+}
+
 /* Overall Container */
 .simulation-container {
   display: flex;
@@ -7,9 +13,7 @@
   max-width: 1300px;
   margin: 0 auto;
   padding: 32px 16px;
-  background-color: #f4f7fa;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: inherit;
 }
 
 /* Wrapper for cards and room readers */
