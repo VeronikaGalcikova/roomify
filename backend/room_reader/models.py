@@ -1,8 +1,7 @@
 from django.db import models
 import uuid
-
 from card.models import Card
-from core import settings
+
 
 class RoomReader(models.Model):
     uid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
@@ -15,15 +14,15 @@ class RoomReader(models.Model):
     
     
 class UserAgreement(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="agreements")
+    card = models.ForeignKey(Card, on_delete=models.CASCADE, related_name="agreements")
     room_reader = models.ForeignKey(RoomReader, on_delete=models.CASCADE, related_name="agreements")
     access = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = ('user', 'room_reader')
+        unique_together = ('card_id', 'room_reader')
 
     def __str__(self):
-        return f"Agreement for {self.user} in {self.room_reader}"
+        return f"Agreement for Card {self.card_id} in {self.room_reader}"
     
     
 class RoomEntryLog(models.Model):
