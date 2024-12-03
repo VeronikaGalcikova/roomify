@@ -1,125 +1,123 @@
 <div class="registration-container">
   <div class="registration-card">
-    <h1>Vytvoriť účet</h1>
+    <h1>Create account</h1>
     <form (ngSubmit)="onSubmit(registrationForm)" #registrationForm="ngForm">
-      <label for="username">Používateľské meno</label>
-      <input
-        type="text"
-        id="username"
-        [(ngModel)]="username"
-        name="username"
-        #usernameCtrl="ngModel"
-        required
-        minlength="3"
-        placeholder="Zadajte používateľské meno"
-      />
-      <div *ngIf="usernameCtrl.invalid && usernameCtrl.touched" class="error">
-        <small *ngIf="usernameCtrl.errors?.['required']"
-          >Používateľské meno je povinné.</small
-        >
-        <small *ngIf="usernameCtrl.errors?.['minlength']"
-          >Minimálna dĺžka je 3 znaky.</small
-        >
-      </div>
+      <div class="form-content">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            [(ngModel)]="username"
+            name="username"
+            #usernameCtrl="ngModel"
+            required
+            minlength="3"
+            placeholder="Enter a username"
+          />
+          <div [ngStyle]="{ 'visibility': (usernameCtrl.invalid && usernameCtrl.touched) ? 'visible' : 'hidden' }" class="error">
+            <small *ngIf="usernameCtrl.errors?.['required']">Username is required.</small>
+            <small *ngIf="usernameCtrl.errors?.['minlength']">The minimum length is 3 characters.</small>
+          </div>
+        </div>
 
-      <label for="password">Heslo</label>
-      <input
-        type="password"
-        id="password"
-        [(ngModel)]="password"
-        name="password"
-        #passwordCtrl="ngModel"
-        required
-        minlength="6"
-        placeholder="Zadajte heslo"
-      />
-      <div *ngIf="passwordCtrl.invalid && passwordCtrl.touched" class="error">
-        <small *ngIf="passwordCtrl.errors?.['required']"
-          >Heslo je povinné.</small
-        >
-        <small *ngIf="passwordCtrl.errors?.['minlength']"
-          >Minimálna dĺžka hesla je 6 znakov.</small
-        >
-      </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            [(ngModel)]="password"
+            name="password"
+            #passwordCtrl="ngModel"
+            required
+            minlength="6"
+            placeholder="Enter a password"
+          />
+          <div [ngStyle]="{ 'visibility': (passwordCtrl.invalid && passwordCtrl.touched) ? 'visible' : 'hidden' }" class="error">
+            <small *ngIf="passwordCtrl.errors?.['required']">Password is required.</small>
+            <small *ngIf="passwordCtrl.errors?.['minlength']">The minimum password length is 6 characters.</small>
+          </div>
+          
+        </div>
 
-      <label for="confirmPassword">Potvrďte heslo</label>
-      <input
-        type="password"
-        id="confirmPassword"
-        [(ngModel)]="confirmPassword"
-        name="confirmPassword"
-        #confirmPasswordCtrl="ngModel"
-        required
-        placeholder="Potvrďte heslo"
-      />
-      <div
-        *ngIf="confirmPasswordCtrl.invalid && confirmPasswordCtrl.touched"
-        class="error"
-      >
-        <small>Potvrdenie hesla je povinné.</small>
-      </div>
-      <div
-        *ngIf="passwordMismatch && confirmPasswordCtrl.touched"
-        class="error"
-      >
-        <small>Heslá sa nezhodujú.</small>
-      </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            #confirmPasswordCtrl="ngModel"
+            required
+            placeholder="Confirm your password"
+          />
+          <div [ngStyle]="{ 'visibility': (confirmPasswordCtrl.invalid && confirmPasswordCtrl.touched) || passwordMismatch ? 'visible' : 'hidden' }" class="error">
+            <small *ngIf="confirmPasswordCtrl.invalid && confirmPasswordCtrl.touched">Password confirmation is required.</small>
+            <small *ngIf="passwordMismatch && confirmPasswordCtrl.touched">Passwords do not match.</small>
+          </div>
+        </div>
 
-      <label for="email">Email</label>
-      <input
-        type="email"
-        id="email"
-        [(ngModel)]="email"
-        name="email"
-        #emailCtrl="ngModel"
-        required
-        email
-        placeholder="Zadajte váš email"
-      />
-      <div *ngIf="emailCtrl.invalid && emailCtrl.touched" class="error">
-        <small *ngIf="emailCtrl.errors?.['required']">Email je povinný.</small>
-        <small *ngIf="emailCtrl.errors?.['email']"
-          >Neplatný formát emailu.</small
-        >
-      </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            [(ngModel)]="email"
+            name="email"
+            #emailCtrl="ngModel"
+            required
+            email
+            placeholder="Enter your email"
+          />
+          <div [ngStyle]="{ 'visibility': (emailCtrl.invalid && emailCtrl.touched) ? 'visible' : 'hidden' }" class="error">
+            <small *ngIf="emailCtrl.errors?.['required']">Email is required.</small>
+            <small *ngIf="emailCtrl.errors?.['email']">Invalid email format.</small>
+          </div>
+          
+        </div>
 
-      <label for="first_name">Meno</label>
-      <input
-        type="text"
-        id="first_name"
-        [(ngModel)]="first_name"
-        name="first_name"
-        #firstNameCtrl="ngModel"
-        required
-        placeholder="Zadajte vaše meno"
-      />
-      <div *ngIf="firstNameCtrl.invalid && firstNameCtrl.touched" class="error">
-        <small>Meno je povinné.</small>
-      </div>
+        <div class="form-group">
+          <label for="first_name">Name</label>
+          <input
+            type="text"
+            id="first_name"
+            [(ngModel)]="first_name"
+            name="first_name"
+            #firstNameCtrl="ngModel"
+            required
+            placeholder="Enter your name"
+          />
+          <div [ngStyle]="{ 'visibility': (firstNameCtrl.invalid && firstNameCtrl.touched) ? 'visible' : 'hidden' }" class="error">
+            <small>Name is required.</small>
+          </div>          
+        </div>
 
-      <label for="last_name">Priezvisko</label>
-      <input
-        type="text"
-        id="last_name"
-        [(ngModel)]="last_name"
-        name="last_name"
-        #lastNameCtrl="ngModel"
-        required
-        placeholder="Zadajte vaše priezvisko"
-      />
-      <div *ngIf="lastNameCtrl.invalid && lastNameCtrl.touched" class="error">
-        <small>Priezvisko je povinné.</small>
+        <div class="form-group">
+          <label for="last_name">Surname</label>
+          <input
+            type="text"
+            id="last_name"
+            [(ngModel)]="last_name"
+            name="last_name"
+            #lastNameCtrl="ngModel"
+            required
+            placeholder="Enter your surname"
+          />
+          <div [ngStyle]="{ 'visibility': (lastNameCtrl.invalid && lastNameCtrl.touched) ? 'visible' : 'hidden' }" class="error">
+            <small>Surname is required.</small>
+          </div>          
+        </div>
       </div>
 
       <button
         type="submit"
         [disabled]="registrationForm.invalid || passwordMismatch"
       >
-        Registrácia
+        Create account
       </button>
     </form>
     <div class="registration-links">
-      <a routerLink="/login">Máte už účet? Prihláste sa</a>
+      <a routerLink="/login">Already have an account? Log in</a>
     </div>
   </div>
 </div>

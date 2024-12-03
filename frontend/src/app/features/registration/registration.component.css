@@ -16,7 +16,7 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 2em;
   width: 100%;
-  max-width: 400px;
+  max-width: 600px;
   text-align: center;
 }
 
@@ -26,6 +26,25 @@ form {
   flex-direction: column;
   gap: 1em;
 }
+
+/* Adjust the form layout to two columns */
+.form-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal columns */
+  gap: 1em; /* Space between fields */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure the button spans both columns */
+button {
+  grid-column: span 2; /* Button will span both columns */
+  margin-top: 1em;
+}
+
 
 label {
   text-align: left;
@@ -80,6 +99,6 @@ button:hover {
   color: red;
   text-align: left;
   font-size: 0.8em;
-  margin-top: -0.5em;
+  margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
