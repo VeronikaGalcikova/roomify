@@ -5,10 +5,8 @@ import { ILoginDto, ILoginResponse } from '../../shared/auth/login.interface';
 import { AuthRoutes } from '../../shared/auth/routes.enum';
 import { API_URL } from '../../app.config';
 import { IRegistrationDto, IRegistrationResponse } from '../../shared/auth/registration.interface';
-
-export interface AuthResponse {
-  token: string;
-}
+import { IJWTdata } from '../../shared/auth/jwt.interface';
+import { IRefreshResponse } from '../../shared/auth/refresh.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +14,7 @@ export interface AuthResponse {
 export class AuthService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  isAdmin$ = new BehaviorSubject<boolean>(false);
   
   constructor(private http: HttpClient, @Inject(API_URL) private apiUrl: string) {}
 
@@ -31,6 +30,10 @@ export class AuthService {
       next: (response: ILoginResponse) => {
         localStorage.setItem('accessToken', response.access);
         localStorage.setItem('refreshToken', response.refresh);
+        const tokenData = this.decodeToken(response.access);
+        if (tokenData) {
+          this.isAdmin$.next(tokenData.is_superuser);
+        }
         this.isAuthenticatedSubject.next(true);
       },
     });
@@ -52,5 +55,43 @@ export class AuthService {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     this.isAuthenticatedSubject.next(false);
+  }
+
+  refreshToken(): Observable<IRefreshResponse | null> {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) {
+      return new Observable((observer) => {
+        observer.next(null);
+        observer.complete();
+      });
+    }
+
+    const refreshUrl = `${this.apiUrl}${AuthRoutes.REFRESH}/`;
+    const response = this.http.post<IRefreshResponse>(refreshUrl, {
+      refresh: refreshToken,
+    });
+
+    response.subscribe({
+      next: (response: IRefreshResponse) => {
+        console.log('Token refreshed successfully', this.decodeToken(response.access));
+        localStorage.setItem('accessToken', response.access);
+        this.isAuthenticatedSubject.next(true);
+      },
+    });
+
+    return response;
+  }
+
+  decodeToken(token: string): IJWTdata | null {
+    try {
+      const payload = token.split('.')[1];
+      const decodedPayload = atob(payload); // Decodes Base64 string
+      const tokenData = JSON.parse(decodedPayload);
+      console.log('Decoded token data:', tokenData);
+      return tokenData;
+    } catch (error) {
+      console.error('Error decoding token', error);
+      return null;
+    }
   }
 }

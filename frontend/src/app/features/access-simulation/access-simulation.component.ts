@@ -65,7 +65,9 @@ export class AccessSimulationComponent {
     try {
       const payload = token.split('.')[1];
       const decodedPayload = atob(payload); // Decodes Base64 string
-      return JSON.parse(decodedPayload);
+      const tokenData = JSON.parse(decodedPayload);
+      console.log('Decoded token data:', tokenData);
+      return tokenData;
     } catch (error) {
       console.error('Error decoding token', error);
       return null;
