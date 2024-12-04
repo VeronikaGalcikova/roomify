@@ -1,33 +1,52 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { IUser } from '../../shared/user/get-all-users.interface';
 import { UserService } from '../../services/user/user.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { UserManagementComponent } from './user-management/user-management.component';
+import { CardManagementComponent } from './card-management/card-management.component';
+import { RoomsManagementComponent } from './rooms-management/rooms-management.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatSnackBarModule,
+    UserManagementComponent,
+    CardManagementComponent,
+    RoomsManagementComponent,
+  ],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
-  users: IUser[] = []; // To store the fetched users
-  errorMessage: string = '';
+  // Property to track the selected view
+  selectedView:
+    | 'users-management'
+    | 'cards-management'
+    | 'rooms-management'
+    | 'last-accesses'
+    | 'admin-panel' = 'users-management';
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private snackBar: MatSnackBar
+  ) {}
 
-  ngOnInit(): void {
-    this.loadUsers();
-  }
+  ngOnInit(): void {}
 
-  loadUsers(): void {
-    this.userService.getAllUsers().subscribe({
-      next: (users) => {
-        this.users = users;
-      },
-      error: (error) => {
-        console.error('Error fetching users:', error);
-        this.errorMessage = 'Failed to load users.';
-      },
-    });
+  // Method to change the selected view
+  selectView(
+    view:
+      | 'users-management'
+      | 'cards-management'
+      | 'rooms-management'
+      | 'last-accesses'
+      | 'admin-panel'
+  ): void {
+    this.selectedView = view;
   }
 }

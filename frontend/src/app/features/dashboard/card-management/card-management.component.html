@@ -1,0 +1,69 @@
+<h1>Card Management</h1>
+<p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+<!-- Add Card Button -->
+<button (click)="initiateAddCard()">Add New Card</button>
+
+<!-- Cards Table -->
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Card ID</th>
+      <th>Allowed</th>
+      <th>User ID</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let card of cards">
+      <td>{{ card.user }}</td>
+      <td>{{ card.card_id }}</td>
+      <td>{{ card.allowed ? "Yes" : "No" }}</td>
+      <td>{{ card.uid }}</td>
+      <td>
+        <button (click)="editCard(card)">Edit</button>
+        <button (click)="deleteCard(card.uid)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Add/Edit Card Form -->
+<div *ngIf="isEditing || selectedCard">
+  <h2 *ngIf="!isEditing">Add Card</h2>
+  <h2 *ngIf="isEditing">Edit Card</h2>
+  <form (ngSubmit)="isEditing ? updateCard() : addCard(selectedCard!)">
+    <!-- User ID Dropdown -->
+    <label>User:</label>
+    <select
+      [(ngModel)]="selectedCard!.user"
+      name="user"
+      [disabled]="isEditing"
+      required
+    >
+      <option *ngFor="let user of users" [value]="user.id">
+        {{ user.username }} (ID: {{ user.id }})
+      </option>
+    </select>
+
+    <label>Card ID:</label>
+    <input
+      [(ngModel)]="selectedCard!.card_id"
+      name="card_id"
+      type="number"
+      required
+    />
+
+    <label>Allowed:</label>
+    <select [(ngModel)]="selectedCard!.allowed" name="allowed" required>
+      <option [ngValue]="true">Yes</option>
+      <option [ngValue]="false">No</option>
+    </select>
+
+    <button type="submit">
+      {{ isEditing ? "Update Card" : "Add Card" }}
+    </button>
+    <button type="button" (click)="cancelEdit()">Cancel</button>
+  </form>
+</div>

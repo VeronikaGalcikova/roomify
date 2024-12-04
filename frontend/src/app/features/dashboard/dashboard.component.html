@@ -1,1 +1,70 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2>Dashboard</h2>
+    <nav>
+      <ul>
+        <li
+          [class.active]="selectedView === 'users-management'"
+          (click)="selectView('users-management')"
+        >
+          User Management
+        </li>
+        <li
+          [class.active]="selectedView === 'cards-management'"
+          (click)="selectView('cards-management')"
+        >
+          Card Management
+        </li>
+        <li
+          [class.active]="selectedView === 'rooms-management'"
+          (click)="selectView('rooms-management')"
+        >
+          Rooms Management
+        </li>
+        <li
+          [class.active]="selectedView === 'last-accesses'"
+          (click)="selectView('last-accesses')"
+        >
+          Last Accesses
+        </li>
+        <li
+          [class.active]="selectedView === 'admin-panel'"
+          (click)="selectView('admin-panel')"
+        >
+          Admin Panel
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- User Management Section -->
+    <app-user-management
+      *ngIf="selectedView === 'users-management'"
+    ></app-user-management>
+
+    <!-- Card Management Section -->
+    <app-card-management
+      *ngIf="selectedView === 'cards-management'"
+    ></app-card-management>
+
+    <!-- Rooms Management Section -->
+    <app-rooms-management
+      *ngIf="selectedView === 'rooms-management'"
+    ></app-rooms-management>
+
+    <!-- Last Accesses Section -->
+    <section *ngIf="selectedView === 'last-accesses'">
+      <h1>Last Accesses</h1>
+      <p>Last Accesses content goes here.</p>
+    </section>
+
+    <!-- Admin Panel Section -->
+    <section *ngIf="selectedView === 'admin-panel'">
+      <h1>Admin Panel</h1>
+      <p>Admin Panel content goes here.</p>
+    </section>
+  </main>
+</div>
