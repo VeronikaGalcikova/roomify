@@ -66,7 +66,7 @@
   border-radius: 8px;
   padding: 20px;
   background-color: #fff;
-  text-align: center;
+  /* text-align: center; */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
@@ -78,23 +78,48 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
+.chip-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.terminal-img {
+  width: 50px;
+  height: 50px;
+  opacity: 0.5;
+}
+
+.card {
+  background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
+  /* background: linear-gradient(to bottom, rgb(244, 240, 250), #afb9e9); */
+  border: 1px solid #bdbdbd;
+  color: #525252;
+}
+
+.card-content, .room-reader-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.room-reader-content {
+  align-items: flex-end;    /* Align items to the bottom */
+}
+
 /* Card States */
 .card.allowed {
-  background-color: #d1f7d1;
-  border: 1px solid #a5d6a7;
-  color: #388e3c;
+  /* color: #388e3c; */
 }
 
 .card.not-allowed {
-  background-color: #fbe9e7;
-  border: 1px solid #f0a8a3;
-  color: #d32f2f;
+  /* color: #d32f2f; */
 }
 
 /* Room Reader Styles */
 .room-reader {
-  background-color: #e0e0e0;
-  border: 1px solid #bdbdbd;
+  position: relative; /* Required for positioning the icon correctly */
+  background: linear-gradient(to bottom, #ebebec, #c5c5c5);  border: 1px solid #bdbdbd;
   color: #333;
 }
 
@@ -124,3 +149,40 @@
   font-size: 1rem;
   color: #777;
 }
+
+.reader-status-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  opacity: 0; /* Initially hidden */
+  transition: opacity 0.9s ease;
+}
+
+.reader-status-icon.success {
+  background-color: #4caf50; /* Green */
+  /* background-image: url('../../../../public/chip.png'); */
+  opacity: 1;
+}
+
+.reader-status-icon.failure {
+  background-color: #f44336; /* Red */
+  /* background-image: url('../../../../public/chip.png'); */
+  opacity: 1;
+}
+
+.reader-status-icon.visible {
+  animation: fade-out 5s forwards;
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+

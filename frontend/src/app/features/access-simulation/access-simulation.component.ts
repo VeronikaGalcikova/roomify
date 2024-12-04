@@ -17,7 +17,7 @@ import { AccessService } from '../../services/access/access.service';
 export class AccessSimulationComponent {
   decodedToken: IJWTdata | null = null;
   cards: ICard[] = [];
-  roomReaders: IRoomReader[] = [];
+  roomReaders: IRoomReaderWithAccess[] = [];
   errorMessages: string[] = [];
   draggedCardId: string | null = null;
 
@@ -47,7 +47,7 @@ export class AccessSimulationComponent {
 
     this.roomReaderService.getAllRoomReaders().subscribe({
       next: (roomReaders) => {
-        this.roomReaders = roomReaders;
+        this.roomReaders = roomReaders.map(reader => ({ ...reader, accessGranted: null }));
         console.log('Room Readers fetched successfully!', this.roomReaders);
       },
       error: (error) => {
@@ -81,7 +81,7 @@ export class AccessSimulationComponent {
     event.preventDefault();
   }
 
-  onDrop(event: DragEvent, reader: IRoomReader): void {
+  onDrop(event: DragEvent, reader: IRoomReaderWithAccess): void {
     event.preventDefault();
     if (this.draggedCardId) {
       console.log(`Card with ID "${this.draggedCardId}" dropped on Reader "${reader.name}"`);
@@ -95,16 +95,38 @@ export class AccessSimulationComponent {
             console.log('Access verified successfully!', response);
             if (response.access) {
               alert('Access Granted!');
+              reader.accessGranted = true;
+
+              // Reset accessGranted after a timeout
+              setTimeout(() => {
+                reader.accessGranted = null; // Reset after display
+              }, 2000);
             } else {
               alert('Access Denied!');
+              reader.accessGranted = false;
+
+              // Reset accessGranted after a timeout
+              setTimeout(() => {
+                reader.accessGranted = null; // Reset after display
+              }, 2000);
             }
           },
           error: (error) => {
             console.error('Access verification failed!', error);
             alert('Access Denied!');
+            reader.accessGranted = false;
+
+            // Reset accessGranted after a timeout
+            setTimeout(() => {
+              reader.accessGranted = null; // Reset after display
+            }, 2000);
             this.errorMessages.push('Access verification failed!');
           },
         });
     }
   }
+}
+
+export interface IRoomReaderWithAccess extends IRoomReader {
+  accessGranted: boolean | null;
 }
