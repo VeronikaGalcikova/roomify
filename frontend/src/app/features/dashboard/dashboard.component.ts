@@ -1,3 +1,4 @@
+import { LastAccessesComponent } from './last-accesses/last-accesses.component';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { IUser } from '../../shared/user/get-all-users.interface';
@@ -18,6 +19,7 @@ import { RoomsManagementComponent } from './rooms-management/rooms-management.co
     UserManagementComponent,
     CardManagementComponent,
     RoomsManagementComponent,
+    LastAccessesComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
