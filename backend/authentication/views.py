@@ -45,9 +45,15 @@ class UserViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        if page < 1 or limit < 1:
+        if limit < 1:
             return Response(
-                {"detail": "Both 'page' and 'limit' should be greater than 0."},
+                {"detail": "'limit' should be greater than 0."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if page < 1 and page != -1:
+            return Response(
+                {"detail": "'page' should be greater than 0 or -1."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -71,6 +77,14 @@ class UserViewSet(viewsets.ModelViewSet):
 
         # Apply filters to the queryset
         filtered_users = self.queryset.filter(filters)
+
+        # Get number of users after filtering
+        num_of_users = filtered_users.count()
+
+        if page == -1:
+            # Calculate the last page number
+            last_page = (num_of_users // limit) + (1 if num_of_users % limit != 0 else 0)
+            page = last_page  # Set page to last page
 
         # Apply pagination
         start = (page - 1) * limit
