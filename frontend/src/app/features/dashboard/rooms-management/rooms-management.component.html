@@ -1,10 +1,10 @@
-<h1>Rooms Management</h1>
-
-<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-<div *ngIf="successMessage" class="success">{{ successMessage }}</div>
-
-<!-- Add Room Reader Button -->
-<button (click)="initiateAdd()">Add New Room Reader</button>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 0 20px">
+  <div>
+    <h1>Rooms Management</h1>
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  </div>
+  <img src="./add.png" alt="Add New Room Reader" (click)="initiateAdd()" title="Add New Room Reader" style="width: 30px; height: 30px; cursor: pointer;">
+</div>
 
 <!-- Room Readers Table -->
 <table>
@@ -21,9 +21,9 @@
       <td>{{ reader.name }}</td>
       <td>{{ reader.ip }}</td>
       <td>{{ reader.reader_state ? "Active" : "Inactive" }}</td>
-      <td>
-        <button (click)="initiateEdit(reader)">Edit</button>
-        <button (click)="deleteRoomReader(reader.uid)">Delete</button>
+      <td class="align-end" style="gap: 20px; display: flex; justify-content: flex-end;">
+        <img src="./editing.png" alt="Edit Room Reader" (click)="initiateEdit(reader)" title="Edit Room Reader" style="width: 25px; height: 25px; cursor: pointer;">
+        <img src="./bin.png" alt="Delete Room Reader" (click)="deleteRoomReader(reader.uid)" title="Delete Room Reader" style="width: 25px; height: 25px; cursor: pointer;">
       </td>
     </tr>
   </tbody>

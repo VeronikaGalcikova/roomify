@@ -1,7 +1,7 @@
-<h1>Last Accesses</h1>
-
-<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 0 20px">
+  <h1>Last Accesses Management</h1>
+  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+</div>
 <table>
   <thead>
     <tr>
@@ -12,7 +12,6 @@
       <th>Room Reader's Name</th>
       <th>Log Type</th>
       <th>Timestamp</th>
-      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -24,9 +23,6 @@
       <td>{{ readerMap[log.readerid!] || "Unknown Reader" }}</td>
       <td>{{ log.log_type }}</td>
       <td>{{ log.timestamp | date : "short" }}</td>
-      <td>
-        <button (click)="deleteLog(log.id)">Delete</button>
-      </td>
     </tr>
   </tbody>
 </table>
