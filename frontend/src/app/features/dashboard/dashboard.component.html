@@ -28,12 +28,6 @@
         >
           Last Accesses
         </li>
-        <li
-          [class.active]="selectedView === 'admin-panel'"
-          (click)="selectView('admin-panel')"
-        >
-          Admin Panel
-        </li>
       </ul>
     </nav>
   </aside>
@@ -56,15 +50,8 @@
     ></app-rooms-management>
 
     <!-- Last Accesses Section -->
-    <section *ngIf="selectedView === 'last-accesses'">
-      <h1>Last Accesses</h1>
-      <p>Last Accesses content goes here.</p>
-    </section>
-
-    <!-- Admin Panel Section -->
-    <section *ngIf="selectedView === 'admin-panel'">
-      <h1>Admin Panel</h1>
-      <p>Admin Panel content goes here.</p>
-    </section>
+    <app-last-accesses
+      *ngIf="selectedView === 'last-accesses'"
+    ></app-last-accesses>
   </main>
 </div>

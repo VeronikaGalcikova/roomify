@@ -5,6 +5,7 @@ import { ICard, IFindCardsByUserResponse } from '../../shared/card/find-cards-by
 import { CommonModule } from '@angular/common';
 import { RoomReaderService } from '../../services/room-reader/room-reader.service';
 import { IRoomReader } from '../../shared/room-reader/get-all-users.interface';
+import { AccessService } from '../../services/access/access.service';
 
 @Component({
   selector: 'app-access-simulation',
@@ -16,13 +17,14 @@ import { IRoomReader } from '../../shared/room-reader/get-all-users.interface';
 export class AccessSimulationComponent {
   decodedToken: IJWTdata | null = null;
   cards: ICard[] = [];
-  roomReaders: IRoomReader[] = [];
+  roomReaders: IRoomReaderWithAccess[] = [];
   errorMessages: string[] = [];
   draggedCardId: string | null = null;
 
   constructor(
     private cardService: CardService,
-    private roomReaderService: RoomReaderService
+    private roomReaderService: RoomReaderService,
+    private accessService: AccessService,
   ) {}
 
   ngOnInit(): void {
@@ -45,7 +47,7 @@ export class AccessSimulationComponent {
 
     this.roomReaderService.getAllRoomReaders().subscribe({
       next: (roomReaders) => {
-        this.roomReaders = roomReaders;
+        this.roomReaders = roomReaders.map(reader => ({ ...reader, accessGranted: null }));
         console.log('Room Readers fetched successfully!', this.roomReaders);
       },
       error: (error) => {
@@ -63,30 +65,70 @@ export class AccessSimulationComponent {
     try {
       const payload = token.split('.')[1];
       const decodedPayload = atob(payload); // Decodes Base64 string
-      return JSON.parse(decodedPayload);
+      const tokenData = JSON.parse(decodedPayload);
+      console.log('Decoded token data:', tokenData);
+      return tokenData;
     } catch (error) {
       console.error('Error decoding token', error);
       return null;
     }
   }
 
-  // Event handler for drag start
   onDragStart(event: DragEvent, card: ICard): void {
-    this.draggedCardId = card.card_id;  // Save the card id for later reference
-    event.dataTransfer?.setData('text', card.card_id); // Set the dragged card's ID in dataTransfer
+    this.draggedCardId = card.uid;
+    event.dataTransfer?.setData('text', card.card_id);
   }
 
-  // Allow the drop action on room readers
   onDragOver(event: DragEvent): void {
-    event.preventDefault();  // Necessary to allow a drop
+    event.preventDefault();
   }
 
-  // Handle the drop event on a room reader
-  onDrop(event: DragEvent, reader: IRoomReader): void {
+  onDrop(event: DragEvent, reader: IRoomReaderWithAccess): void {
     event.preventDefault();
     if (this.draggedCardId) {
       console.log(`Card with ID "${this.draggedCardId}" dropped on Reader "${reader.name}"`);
-      // You can add further logic here, such as updating the state of the reader or the card
+      this.accessService
+        .verify({
+          card: this.draggedCardId,
+          room_reader: reader.uid,
+        })
+        .subscribe({
+          next: (response) => {
+            console.log('Access verified successfully!', response);
+            if (response.access) {
+              alert('Access Granted!');
+              reader.accessGranted = true;
+
+              // Reset accessGranted after a timeout
+              setTimeout(() => {
+                reader.accessGranted = null; // Reset after display
+              }, 2000);
+            } else {
+              alert('Access Denied!');
+              reader.accessGranted = false;
+
+              // Reset accessGranted after a timeout
+              setTimeout(() => {
+                reader.accessGranted = null; // Reset after display
+              }, 2000);
+            }
+          },
+          error: (error) => {
+            console.error('Access verification failed!', error);
+            alert('Access Denied!');
+            reader.accessGranted = false;
+
+            // Reset accessGranted after a timeout
+            setTimeout(() => {
+              reader.accessGranted = null; // Reset after display
+            }, 2000);
+            this.errorMessages.push('Access verification failed!');
+          },
+        });
     }
   }
+}
+
+export interface IRoomReaderWithAccess extends IRoomReader {
+  accessGranted: boolean | null;
 }

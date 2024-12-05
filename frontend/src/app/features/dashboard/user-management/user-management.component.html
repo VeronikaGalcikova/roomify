@@ -1,8 +1,11 @@
-<h1>User Management</h1>
-<p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
-
-<!-- Add User Button -->
-<button (click)="initiateAddUser()">Add New User</button>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 0 20px">
+  <div>
+    <h1>User Management</h1>
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  </div>
+  <!-- <button (click)="initiateAddCard()">Add New Card</button> -->
+  <img src="./add.png" alt="Add New User" (click)="initiateAddUser()" title="Add New User" style="width: 30px; height: 30px; cursor: pointer;">
+</div>
 
 <!-- Users Table -->
 <table>
@@ -13,7 +16,7 @@
       <th>Email</th>
       <th>First Name</th>
       <th>Last Name</th>
-      <th>Actions</th>
+      <th style="display: flex; justify-content: flex-end;">Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -23,9 +26,9 @@
       <td>{{ user.email }}</td>
       <td>{{ user.first_name }}</td>
       <td>{{ user.last_name }}</td>
-      <td>
-        <button (click)="editUser(user)">Edit</button>
-        <button (click)="deleteUser(user.id)">Delete</button>
+      <td class="align-end" style="gap: 20px; display: flex; justify-content: flex-end;">
+        <img src="./editing.png" alt="Edit Card" (click)="editUser(user)" title="Edit User" style="width: 25px; height: 25px; cursor: pointer;">
+        <img src="./bin.png" alt="Delete Card" (click)="deleteUser(user.id)" title="Delete User" style="width: 25px; height: 25px; cursor: pointer;">
       </td>
     </tr>
   </tbody>

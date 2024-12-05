@@ -1,7 +1,13 @@
 from flask import request, Blueprint, jsonify
 from request_manager import RequestManager
+from flask_cors import CORS
 
 api_blueprint = Blueprint('api', __name__)
+
+
+CORS(api_blueprint, resources={
+    r"/api/*": {"origins": ["http://localhost:4200", "http://localhost:80"]}
+})
 
 
 @api_blueprint.route('/verify', methods=['POST'])

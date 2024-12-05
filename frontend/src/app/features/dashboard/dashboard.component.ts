@@ -1,12 +1,13 @@
+import { LastAccessesComponent } from './last-accesses/last-accesses.component';
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
-import { IUser } from '../../shared/user/get-all-users.interface';
-import { UserService } from '../../services/user/user.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserManagementComponent } from './user-management/user-management.component';
 import { CardManagementComponent } from './card-management/card-management.component';
 import { RoomsManagementComponent } from './rooms-management/rooms-management.component';
+import { AuthService } from '../../services/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +19,7 @@ import { RoomsManagementComponent } from './rooms-management/rooms-management.co
     UserManagementComponent,
     CardManagementComponent,
     RoomsManagementComponent,
+    LastAccessesComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
@@ -32,11 +34,15 @@ export class DashboardComponent implements OnInit {
     | 'admin-panel' = 'users-management';
 
   constructor(
-    private userService: UserService,
-    private snackBar: MatSnackBar
+    private authService: AuthService,
+    private router: Router,
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (!this.authService.isAdmin$) {
+      this.router.navigate(['access-simulation']);
+    }
+  }
 
   // Method to change the selected view
   selectView(

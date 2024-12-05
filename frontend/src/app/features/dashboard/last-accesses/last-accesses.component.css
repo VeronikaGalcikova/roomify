@@ -92,63 +92,79 @@ table tr:last-child td:first-child {
 table tr:last-child td:last-child {
   border-bottom-right-radius: 10px; /* Round bottom-right corner */
 }
+/* Button Styles */
 button {
-  padding: 8px 12px;
+  padding: 8px 16px;
   margin: 5px;
   font-size: 14px;
   border: none;
-  border-radius: 3px;
+  border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 button:hover {
   opacity: 0.9;
 }
 
-button:first-of-type {
-  background-color: #4caf50;
-  color: white;
-}
-
-button:last-of-type {
+button.delete-button {
   background-color: #f44336;
   color: white;
 }
 
+button.edit-button {
+  background-color: #2196f3;
+  color: white;
+}
+
+/* Form Styles */
 form {
-  max-width: 400px;
-  margin: 20px 0;
-  padding: 15px;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
   border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #f9f9f9;
+  border-radius: 8px;
+  background-color: #fafafa;
 }
 
 form label {
   display: block;
-  margin: 10px 0 5px;
+  margin-bottom: 8px;
   font-weight: bold;
+  color: #555;
 }
 
-form input {
+form input,
+form select {
   width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 3px;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
   box-sizing: border-box;
 }
 
 form button {
-  width: 100px;
+  width: 120px;
+  background-color: #4caf50;
+  color: white;
 }
 
-.snackbar-success {
-  background-color: #4caf50 !important;
-  color: #fff !important;
+form button.cancel-button {
+  background-color: #9e9e9e;
 }
 
-.snackbar-error {
-  background-color: #f44336 !important;
-  color: #fff !important;
+/* Message Styles */
+.error {
+  color: #f44336;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.success {
+  color: #4caf50;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
 }

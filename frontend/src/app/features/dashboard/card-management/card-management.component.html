@@ -1,29 +1,30 @@
-<h1>Card Management</h1>
-<p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
-
-<!-- Add Card Button -->
-<button (click)="initiateAddCard()">Add New Card</button>
-
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 0 20px">
+  <div>
+    <h1>Card Management</h1>
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  </div>
+  <img src="./add.png" alt="Add New Card" (click)="initiateAddCard()" title="Add New Card" style="width: 30px; height: 30px; cursor: pointer;">
+</div>
 <!-- Cards Table -->
 <table>
   <thead>
     <tr>
       <th>ID</th>
-      <th>Card ID</th>
+      <th>Card Name</th>
       <th>Allowed</th>
       <th>User ID</th>
-      <th>Actions</th>
+      <th style="display: flex; justify-content: flex-end;">Actions</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let card of cards">
-      <td>{{ card.user }}</td>
+      <td>{{ card.uid }}</td>
       <td>{{ card.card_id }}</td>
       <td>{{ card.allowed ? "Yes" : "No" }}</td>
-      <td>{{ card.uid }}</td>
-      <td>
-        <button (click)="editCard(card)">Edit</button>
-        <button (click)="deleteCard(card.uid)">Delete</button>
+      <td>{{ card.user }}</td>
+      <td class="align-end" style="gap: 20px; display: flex; justify-content: flex-end;">
+        <img src="./editing.png" alt="Edit Card" (click)="editCard(card)" title="Edit Card" style="width: 25px; height: 25px; cursor: pointer;">
+        <img src="./bin.png" alt="Delete Card" (click)="deleteCard(card.uid)" title="Delete Card" style="width: 25px; height: 25px; cursor: pointer;">
       </td>
     </tr>
   </tbody>

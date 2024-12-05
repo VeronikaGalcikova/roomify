@@ -1,0 +1,28 @@
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 0 20px">
+  <h1>Last Accesses Management</h1>
+  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>User's Card ID</th>
+      <th>User Name</th>
+      <th>Room Reader's ID</th>
+      <th>Room Reader's Name</th>
+      <th>Log Type</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let log of entryLogs">
+      <td>{{ log.id }}</td>
+      <td>{{ log.card }}</td>
+      <td>{{ userMap[log.userid!] || "Unknown User" }}</td>
+      <td>{{ log.reader }}</td>
+      <td>{{ readerMap[log.readerid!] || "Unknown Reader" }}</td>
+      <td>{{ log.log_type }}</td>
+      <td>{{ log.timestamp | date : "short" }}</td>
+    </tr>
+  </tbody>
+</table>

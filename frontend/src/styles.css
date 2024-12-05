@@ -23,7 +23,7 @@ main {
   flex: 1; /* Ensures main takes up available space */
   display: flex;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
   padding: 1em;
 }
 
