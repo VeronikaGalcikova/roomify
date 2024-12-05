@@ -63,7 +63,7 @@ export class CardManagementComponent implements OnInit {
   addCard(newCard: ICard): void {
     const cardData = {
       card_id: newCard.card_id,
-      allowed: newCard.allowed,
+      allowed: newCard.expiration_date,
       user: newCard.user, // Ensure 'user' is selected from existing users
     };
     this.cardService.createCard(newCard).subscribe({
@@ -122,7 +122,7 @@ export class CardManagementComponent implements OnInit {
   // Initialize for adding a new card
   initiateAddCard(): void {
     this.isEditing = false;
-    this.selectedCard = { card_id: '', allowed: false, user: 0 } as ICard;
+    this.selectedCard = { card_id: '', expiration_date: '', user: 0 } as ICard;
   }
 
   // Cancel add/edit operation

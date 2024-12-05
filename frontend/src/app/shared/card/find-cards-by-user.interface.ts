@@ -8,6 +8,6 @@ export interface ICard {
   id: number;
   uid: string;
   card_id: string;
-  allowed: boolean;
+  expiration_date: string;
   user: number;
 }

@@ -11,7 +11,7 @@
     <tr>
       <th>ID</th>
       <th>Card Name</th>
-      <th>Allowed</th>
+      <th>Expiration</th>
       <th>User ID</th>
       <th style="display: flex; justify-content: flex-end;">Actions</th>
     </tr>
@@ -20,7 +20,7 @@
     <tr *ngFor="let card of cards">
       <td>{{ card.uid }}</td>
       <td>{{ card.card_id }}</td>
-      <td>{{ card.allowed ? "Yes" : "No" }}</td>
+      <td>{{ card.expiration_date | date: 'longDate' }}</td>
       <td>{{ card.user }}</td>
       <td class="align-end" style="gap: 20px; display: flex; justify-content: flex-end;">
         <img src="./editing.png" alt="Edit Card" (click)="editCard(card)" title="Edit Card" style="width: 25px; height: 25px; cursor: pointer;">
@@ -56,8 +56,9 @@
       required
     />
 
+    <!-- TODO: prerobit na exp -->
     <label>Allowed:</label>
-    <select [(ngModel)]="selectedCard!.allowed" name="allowed" required>
+    <select [(ngModel)]="selectedCard!.expiration_date" name="allowed" required>
       <option [ngValue]="true">Yes</option>
       <option [ngValue]="false">No</option>
     </select>
