@@ -18,17 +18,33 @@ export class UserManagementComponent implements OnInit {
   errorMessage: string = '';
   isEditing: boolean = false;
 
+  filter: IFilter = {
+    id: null,
+    username: '',
+    email: '',
+  };
+  // Pagination variables
+  currentPage: number = 1;
+
   constructor(
     private userService: UserService,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
-    this.loadUsers();
+    this.loadUsers(1, 25);
   }
-
-  loadUsers(): void {
-    this.userService.getAllUsers().subscribe({
+  
+  loadUsers(page: number, limit: number): void {
+    const findUsersByFilterDto = {
+      page,
+      limit,
+      id: this.filter.id ? parseInt(this.filter.id) : undefined,
+      username: this.filter.username || undefined,
+      email: this.filter.email || undefined,
+    };
+    console.log(findUsersByFilterDto);
+    this.userService.findUsersByFilter(findUsersByFilterDto).subscribe({
       next: (users) => {
         this.users = users;
       },
@@ -44,7 +60,7 @@ export class UserManagementComponent implements OnInit {
   addUser(newUser: IUser): void {
     this.userService.createUser(newUser).subscribe({
       next: () => {
-        this.loadUsers();
+        this.loadUsers(1, 25);
         this.cancelEdit();
         this.showSuccessMessage('User added successfully!');
       },
@@ -70,7 +86,7 @@ export class UserManagementComponent implements OnInit {
           next: () => {
             this.isEditing = false;
             this.selectedUser = null;
-            this.loadUsers();
+            this.loadUsers(1, 25);
             this.showSuccessMessage('User updated successfully!');
           },
           error: (error) => {
@@ -85,7 +101,7 @@ export class UserManagementComponent implements OnInit {
   deleteUser(userId: number): void {
     this.userService.deleteUser(userId).subscribe({
       next: () => {
-        this.loadUsers();
+        this.loadUsers(1, 25);
         this.showSuccessMessage('User deleted successfully!');
       },
       error: (error) => {
@@ -128,4 +144,22 @@ export class UserManagementComponent implements OnInit {
       panelClass: ['snackbar-error'],
     });
   }
+
+
+  // Function to change the page
+  changePage(page: number) {
+    this.currentPage = page;
+    this.loadUsers(page, 25);
+  }
+
+  onFilterChange() {
+    this.currentPage = 1;
+    this.loadUsers(1, 25);
+  }
+}
+
+export interface IFilter {
+  id?: string | null;
+  username?: string;
+  email?: string;
 }
