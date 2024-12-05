@@ -1,0 +1,32 @@
+<h1>Last Accesses</h1>
+
+<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>User's Card ID</th>
+      <th>User Name</th>
+      <th>Room Reader's ID</th>
+      <th>Room Reader's Name</th>
+      <th>Log Type</th>
+      <th>Timestamp</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let log of entryLogs">
+      <td>{{ log.id }}</td>
+      <td>{{ log.card }}</td>
+      <td>{{ userMap[log.userid!] || "Unknown User" }}</td>
+      <td>{{ log.reader }}</td>
+      <td>{{ readerMap[log.readerid!] || "Unknown Reader" }}</td>
+      <td>{{ log.log_type }}</td>
+      <td>{{ log.timestamp | date : "short" }}</td>
+      <td>
+        <button (click)="deleteLog(log.id)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

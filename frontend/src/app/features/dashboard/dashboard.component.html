@@ -56,10 +56,9 @@
     ></app-rooms-management>
 
     <!-- Last Accesses Section -->
-    <section *ngIf="selectedView === 'last-accesses'">
-      <h1>Last Accesses</h1>
-      <p>Last Accesses content goes here.</p>
-    </section>
+    <app-last-accesses
+      *ngIf="selectedView === 'last-accesses'"
+    ></app-last-accesses>
 
     <!-- Admin Panel Section -->
     <section *ngIf="selectedView === 'admin-panel'">
