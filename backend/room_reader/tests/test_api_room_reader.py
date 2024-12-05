@@ -9,21 +9,21 @@ class RoomReaderAPITests(APITestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.User = None
-        self.user = None
+        self.superuser = None
         self.room_reader = None
         self.room_reader_list_url = None
         self.room_reader_detail_url = None
 
     def setUp(self):
         self.User = get_user_model()
-        self.user = self.User.objects.create_user(username="test_user", password="password")
+        self.superuser = self.User.objects.create_user(username="test_user", password="password", is_superuser=True)
         self.room_reader = RoomReader.objects.create(name="Main Entrance", ip="192.168.1.1", reader_state=True)
         self.room_reader_list_url = reverse("roomreader-list")
         self.room_reader_detail_url = reverse("roomreader-detail", kwargs={"pk": self.room_reader.uid})
 
     def _authenticate(self):
         """Authenticate user."""
-        self.client.force_authenticate(user=self.user)
+        self.client.force_authenticate(user=self.superuser)
 
     def _create_room_reader(self):
         """Create a new room reader via POST request."""
