@@ -12,11 +12,12 @@ import { AuthService } from './services/auth/auth.service';
 })
 export class AppComponent {
   title = 'frontend';
-  isAuthenticated: boolean = false;
-  isAdmin: boolean = false;
+  isAuthenticated: boolean | null = null;
+  isAdmin: boolean | null = null;
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
+    this.authService.refreshAuthStatus();
     this.authService.isAuthenticated$.subscribe((authStatus) => {
       this.isAuthenticated = authStatus;
     });
