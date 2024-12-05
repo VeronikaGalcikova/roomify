@@ -6,11 +6,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../services/user/user.service';
 import { IUser } from '../../../shared/user/get-all-users.interface';
+import { ModalComponent } from '../../shared/modal/modal.component';
 
 @Component({
   selector: 'app-card-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ModalComponent],
   templateUrl: './card-management.component.html',
   styleUrls: ['./card-management.component.css'],
 })
@@ -20,6 +21,7 @@ export class CardManagementComponent implements OnInit {
   users: IUser[] = [];
   errorMessage: string = '';
   isEditing: boolean = false;
+  isModalVisible = false;
 
   constructor(
     private cardService: CardService,
@@ -30,6 +32,14 @@ export class CardManagementComponent implements OnInit {
   ngOnInit(): void {
     this.loadCards();
     this.loadUsers();
+  }
+
+  showModal() {
+    this.isModalVisible = true;
+  }
+
+  onModalClose() {
+    this.isModalVisible = false;
   }
 
   loadCards(): void {
