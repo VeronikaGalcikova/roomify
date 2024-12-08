@@ -51,6 +51,10 @@ class UserAgreementViewSet(viewsets.ModelViewSet):
         # Query the database
         try:
             agreement = UserAgreement.objects.get(card_id=card_id, room_reader_id=room_reader_id)
+
+            log_type = 'denied' if not agreement.access else 'entry'
+            RoomEntryLog.objects.create(card_id=card_id, reader_id=room_reader_id, log_type=log_type)
+
             return Response(
                 {"access": agreement.access},
                 status=status.HTTP_200_OK
