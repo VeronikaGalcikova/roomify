@@ -339,7 +339,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"page\": 1,\n    \"limit\": 25,\n    \"card_uid\": \"7\",  // optional\n    \"card_id\": \"hu\",  // optional\n    \"user_name\": \"admin\",  // optional\n    \"user_id\": 2  // optional\n}",
+							"raw": "{\n    \"page\": 1,\n    \"limit\": 25,\n    \"id\": 2,  // optional\n    \"username\": \"admin\",  // optional\n    \"email\": \".com\"  // optional\n}",
 							"options": {
 								"raw": {
 									"language": "json"
