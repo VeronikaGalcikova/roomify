@@ -4,11 +4,12 @@ import { IUser } from '../../../shared/user/get-all-users.interface';
 import { UserService } from '../../../services/user/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ModalComponent } from '../../shared/modal/modal.component';
 
 @Component({
   selector: 'app-user-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ModalComponent],
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.css'],
 })
@@ -17,6 +18,7 @@ export class UserManagementComponent implements OnInit {
   selectedUser: IUser | null = null;
   errorMessage: string = '';
   isEditing: boolean = false;
+  isModalVisible = false;
 
   filter: IFilter = {
     id: null,
@@ -33,6 +35,14 @@ export class UserManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUsers(1, 25);
+  }
+
+  showModal() {
+    this.isModalVisible = true;
+  }
+
+  onModalClose() {
+    this.isModalVisible = false;
   }
   
   loadUsers(page: number, limit: number): void {

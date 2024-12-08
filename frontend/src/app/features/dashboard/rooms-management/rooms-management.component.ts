@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RoomReaderService } from '../../../services/room-reader/room-reader.service';
 import { IRoomReader } from '../../../shared/room-reader/get-all-users.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ModalComponent } from '../../shared/modal/modal.component';
 
 @Component({
   selector: 'app-rooms-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ModalComponent],
   templateUrl: './rooms-management.component.html',
   styleUrl: './rooms-management.component.css',
 })
@@ -17,11 +18,21 @@ export class RoomsManagementComponent {
   isEditing: boolean = false;
   errorMessage: string = '';
   successMessage: string = '';
+  isModalVisible = false;
 
   constructor(private roomReaderService: RoomReaderService) {}
 
   ngOnInit(): void {
     this.getRoomReaders();
+  }
+
+  
+  showModal() {
+    this.isModalVisible = true;
+  }
+
+  onModalClose() {
+    this.isModalVisible = false;
   }
 
   getRoomReaders(): void {

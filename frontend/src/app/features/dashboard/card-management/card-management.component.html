@@ -65,10 +65,10 @@
       <option [ngValue]="true">Yes</option>
       <option [ngValue]="false">No</option>
     </select>
-    <button type="submit">
+    <button type="submit" (click)="onModalClose()">
       {{ isEditing ? 'Update Card ' + selectedCard!.card_id : 'Add Card' }}
     </button>
-    <button type="button" (click)="cancelEdit()">Cancel</button>
+    <button type="button" (click)="cancelEdit(); onModalClose()">Cancel</button>
   </form>
 </div>
 </app-modal>

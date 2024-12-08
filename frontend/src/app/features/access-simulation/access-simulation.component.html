@@ -11,14 +11,14 @@
         <div
           *ngFor="let card of cards"
           class="card"
-          [ngClass]="{ 'allowed': card.allowed, 'not-allowed': !card.allowed }"
+          [ngClass]="{ 'allowed': card.expiration_date, 'not-allowed': !card.expiration_date }"
           draggable="true"
           (dragstart)="onDragStart($event, card)"
         >
           <div class="card-content">
             <div>
               <h3>{{ card.card_id }}</h3>
-              <p>Status: {{ card.allowed ? 'Allowed' : 'Not Allowed' }}</p>
+              <p>Status: {{ card.expiration_date ? 'Allowed' : 'Not Allowed' }}</p>
             </div>
             <img src="./chip.png" alt="chip" class="chip-img">
           </div>
