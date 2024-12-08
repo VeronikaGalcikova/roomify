@@ -26,7 +26,7 @@
     <tr *ngFor="let reader of roomReaders">
       <td>{{ reader.name }}</td>
       <td>{{ reader.ip }}</td>
-      <td>{{ reader.reader_state ? "Active" : "Inactive" }}</td>
+      <td>{{ reader.active ? "Active" : "Inactive" }}</td>
       <td class="align-end" style="gap: 20px; display: flex; justify-content: flex-end;">
         <img src="./editing.png" alt="Edit Room Reader" (click)="initiateEdit(reader); showModal();" title="Edit Room Reader" style="width: 25px; height: 25px; cursor: pointer;">
         <img src="./bin.png" alt="Delete Room Reader" (click)="deleteRoomReader(reader.uid)" title="Delete Room Reader" style="width: 25px; height: 25px; cursor: pointer;">
@@ -64,7 +64,7 @@
 
     <label>State:</label>
     <select
-      [(ngModel)]="selectedRoomReader.reader_state"
+      [(ngModel)]="selectedRoomReader.active"
       name="reader_state"
       required
     >

@@ -5,5 +5,5 @@ export interface IRoomReader {
     uid: string;
     name: string;
     ip: string;
-    reader_state: boolean;
+    active: boolean;
 }

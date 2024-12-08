@@ -1,43 +1,35 @@
-// frontend/src/app/services/room-entry-log.service.ts
-
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface IRoomEntryLog {
-  id: number;
-  card: string; // UUID of the card
-  userid: number; // ID of the user
-  reader: string; // UUID of the room reader
-  readerid: string;
-  log_type: 'entry' | 'exit' | 'denied';
-  timestamp: string; // ISO Date String
-}
+import {
+  IFindEntryLogsByFilterDto,
+  IFindEntryLogsByFilterResponse,
+  IRoomEntryLog,
+} from '../../shared/entry-log/entry-log.interface';
+import { API_URL } from '../../app.config';
+import { EntryLogRoutes } from '../../shared/entry-log/routes.enum';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RoomEntryLogService {
-  private apiUrl = 'http://localhost:8000/api/room-entry-logs/';
-
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(API_URL) private apiUrl: string
+  ) {}
 
   getEntryLogs(): Observable<IRoomEntryLog[]> {
-    return this.http.get<IRoomEntryLog[]>(this.apiUrl);
+    const getEntryLogsUrl = `${this.apiUrl}${EntryLogRoutes.GET_ALL_ENTRY_LOGS}`;
+    return this.http.get<IRoomEntryLog[]>(getEntryLogsUrl);
   }
 
-  createEntryLog(log: Partial<IRoomEntryLog>): Observable<IRoomEntryLog> {
-    return this.http.post<IRoomEntryLog>(this.apiUrl, log);
-  }
-
-  updateEntryLog(
-    id: number,
-    log: Partial<IRoomEntryLog>
-  ): Observable<IRoomEntryLog> {
-    return this.http.put<IRoomEntryLog>(`${this.apiUrl}${id}/`, log);
-  }
-
-  deleteEntryLog(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}${id}/`);
+  findEntryLogsByFilter(
+    findEntryLogsByFilterDto: IFindEntryLogsByFilterDto
+  ): Observable<IFindEntryLogsByFilterResponse> {
+    const findEntryLogsByFilterUrl = `${this.apiUrl}${EntryLogRoutes.FIND_ENTRY_LOGS_BY_FILTER}`;
+    return this.http.post<IFindEntryLogsByFilterResponse>(
+      findEntryLogsByFilterUrl,
+      findEntryLogsByFilterDto
+    );
   }
 }

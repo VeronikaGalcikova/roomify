@@ -1,12 +1,42 @@
 <div class="content">
     <div class="profile-table-container">
         <div class="profile-container">
-            <img src="./user (1).png" alt="Profile Picture" class="profile-picture" />
-            
-            <div class="profile-details">
-            <h1>{{ user.first_name }} {{ user.last_name }}</h1>
-            <p><strong>Username:</strong> {{ user.username }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
+            <div>
+                <img src="./user (2).png" alt="Profile Picture" class="profile-picture" />
+                
+                <div class="profile-details">
+                <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+                <p style="display: flex; gap: 15px;"><strong>Username:</strong> {{ user.username }}</p>
+                <p style="display: flex; gap: 15px;"><strong>Email:</strong> {{ user.email }}</p>
+                </div>
+            </div>
+            <div>
+                <h1>My cards</h1>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Card ID</th>
+                        <th>Expiration</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Card 1</td>
+                        <td>11 January 2025</td>
+                        <td>
+                            <button>Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Card 1</td>
+                        <td>11 January 2025</td>
+                        <td>
+                            <button>Delete</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         <div>

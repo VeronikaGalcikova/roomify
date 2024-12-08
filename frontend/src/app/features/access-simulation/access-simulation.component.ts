@@ -4,7 +4,7 @@ import { CardService } from '../../services/card/card.service';
 import { ICard, IFindCardsByUserResponse } from '../../shared/card/find-cards-by-user.interface';
 import { CommonModule } from '@angular/common';
 import { RoomReaderService } from '../../services/room-reader/room-reader.service';
-import { IRoomReader } from '../../shared/room-reader/get-all-users.interface';
+import { IRoomReader } from '../../shared/room-reader/get-all-room-readers.interface';
 import { AccessService } from '../../services/access/access.service';
 
 @Component({

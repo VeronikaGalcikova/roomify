@@ -5,8 +5,12 @@ import { Observable } from 'rxjs';
 import {
   IGetAllRoomReadersResponse,
   IRoomReader,
-} from '../../shared/room-reader/get-all-users.interface';
+} from '../../shared/room-reader/get-all-room-readers.interface';
 import { RoomReaderRoutes } from '../../shared/room-reader/routes.enum';
+import {
+  IFindRoomReadersByFilterDto,
+  IFindRoomReadersByFilterResponse,
+} from '../../shared/room-reader/find-room-readers-by-filter.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +24,16 @@ export class RoomReaderService {
   getAllRoomReaders(): Observable<IGetAllRoomReadersResponse> {
     const getAllRoomReadersUrl = `${this.apiUrl}${RoomReaderRoutes.GET_ALL_ROOM_READERS}`;
     return this.http.get<IGetAllRoomReadersResponse>(getAllRoomReadersUrl);
+  }
+
+  findRoomReadersByFilter(
+    findRoomReadersByFilterDto: IFindRoomReadersByFilterDto
+  ): Observable<IFindRoomReadersByFilterResponse> {
+    const findRoomReadersByFilterUrl = `${this.apiUrl}${RoomReaderRoutes.FIND_ROOM_READERS_BY_FILTER}`;
+    return this.http.post<IFindRoomReadersByFilterResponse>(
+      findRoomReadersByFilterUrl,
+      findRoomReadersByFilterDto
+    );
   }
 
   createRoomReader(roomReader: Partial<IRoomReader>): Observable<IRoomReader> {

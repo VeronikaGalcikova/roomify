@@ -5,18 +5,19 @@ import { IFindUsersByFilterResponse } from '../../shared/user/find-users-by-filt
 import { IUser } from '../../shared/user/get-all-users.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IRoomEntryLog, RoomEntryLogService } from '../../services/room-entry-logs/room-entry-log.service';
+import { RoomEntryLogService } from '../../services/room-entry-logs/room-entry-log.service';
 import { CardService } from '../../services/card/card.service';
 import { RoomReaderService } from '../../services/room-reader/room-reader.service';
-import { IRoomReader } from '../../shared/room-reader/get-all-users.interface';
+import { IRoomReader } from '../../shared/room-reader/get-all-room-readers.interface';
 import { ICard } from '../../shared/card/find-cards-by-user.interface';
+import { IRoomEntryLog } from '../../shared/entry-log/entry-log.interface';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  styleUrl: './profile.component.css',
 })
 export class ProfileComponent {
   entryLogs: IRoomEntryLog[] = [];
@@ -26,7 +27,7 @@ export class ProfileComponent {
     first_name: '',
     last_name: '',
     id: 0,
-    password: ''
+    password: '',
   };
 
   filter: IFilter = {
@@ -51,46 +52,46 @@ export class ProfileComponent {
     private roomReaderService: RoomReaderService
   ) {}
 
-
   ngOnInit(): void {
     this.authService.userIdSubject$.subscribe((userId) => {
       this.userService
-        .findUsersByFilter({ id: (userId ?? 0), page: 1, limit: 1 })
+        .findUsersByFilter({ id: userId ?? -1, page: 1, limit: 1 })
         .subscribe({
           next: (response: IFindUsersByFilterResponse) => {
             this.user = response[0];
+            console.log('User:', this.user);
+            this.fetchCards()
+              .then(() => this.fetchRoomReaders())
+              .then(() => this.fetchEntryLogs(1, 25))
+              .catch((error) => {
+                console.error('Initialization error:', error);
+              });
           },
           error: (error) => {
             console.error('Fetch user cards failed!', error);
           },
         });
     });
-
-    this.fetchCards()
-      .then(() => this.fetchRoomReaders())
-      .then(() => this.fetchEntryLogs(1, 25))
-      .catch((error) => {
-        console.error('Initialization error:', error);
-      });
   }
 
-  
   fetchCards(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.cardService.getAllCards().subscribe({
-        next: (cards) => {
-          this.cards = cards;
-          this.cards.forEach((card) => {
-            this.cardMap[card.uid] = card.user;
-          });
-          console.log('Card Map:', this.cardMap);
-          resolve();
-        },
-        error: (err) => {
-          console.error('Error fetching cards:', err);
-          reject(err);
-        },
-      });
+      this.cardService
+        .findCardsByUser({ user_id: this.user.id.toString() })
+        .subscribe({
+          next: (cards) => {
+            this.cards = cards;
+            this.cards.forEach((card) => {
+              this.cardMap[card.uid] = card.user;
+            });
+            console.log('Card Map:', this.cardMap);
+            resolve();
+          },
+          error: (err) => {
+            console.error('Error fetching cards:', err);
+            reject(err);
+          },
+        });
     });
   }
 
@@ -138,14 +139,14 @@ export class ProfileComponent {
     this.fetchCards()
       .then(() => this.fetchRoomReaders())
       .then(() => this.fetchEntryLogs(this.currentPage, 25));
-    }
+  }
 
   onFilterChange() {
     this.currentPage = 1;
     this.fetchCards()
       .then(() => this.fetchRoomReaders())
-      .then(() => this.fetchEntryLogs(this.currentPage, 25))
-      }
+      .then(() => this.fetchEntryLogs(this.currentPage, 25));
+  }
 }
 
 export interface IFilter {

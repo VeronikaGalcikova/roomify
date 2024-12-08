@@ -1,6 +1,5 @@
 import {
   RoomEntryLogService,
-  IRoomEntryLog,
 } from './../../../services/room-entry-logs/room-entry-log.service';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,8 +10,9 @@ import { CardService } from '../../../services/card/card.service';
 import { IUser } from '../../../shared/user/get-all-users.interface';
 import { ICard } from '../../../shared/card/find-cards-by-user.interface';
 import { RoomReaderService } from '../../../services/room-reader/room-reader.service';
-import { IRoomReader } from '../../../shared/room-reader/get-all-users.interface';
+import { IRoomReader } from '../../../shared/room-reader/get-all-room-readers.interface';
 import { FormsModule } from '@angular/forms';
+import { IRoomEntryLog } from '../../../shared/entry-log/entry-log.interface';
 
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RoomReaderService } from '../../../services/room-reader/room-reader.service';
-import { IRoomReader } from '../../../shared/room-reader/get-all-users.interface';
+import { IRoomReader } from '../../../shared/room-reader/get-all-room-readers.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '../../shared/modal/modal.component';
@@ -110,7 +110,7 @@ export class RoomsManagementComponent {
       uid: '',
       name: '',
       ip: '',
-      reader_state: false,
+      active: false,
     };
     this.isEditing = false;
   }

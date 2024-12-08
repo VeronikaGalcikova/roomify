@@ -14,12 +14,16 @@ import { IRefreshResponse } from '../../shared/auth/refresh.interface';
 export class AuthService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  
   isAdminSubject$ = new BehaviorSubject<boolean>(false);
   isAdmin$ = this.isAdminSubject$.asObservable();
+
   userId$ = new BehaviorSubject<number | null>(null);
   userIdSubject$ = this.userId$.asObservable();
   
-  constructor(private http: HttpClient, @Inject(API_URL) private apiUrl: string) {}
+  constructor(private http: HttpClient, @Inject(API_URL) private apiUrl: string) {
+    this.refreshAuthStatus();
+  }
 
   private hasToken(): boolean {
     return !!localStorage.getItem('accessToken');
@@ -100,18 +104,19 @@ export class AuthService {
     }
   }
 
-  refreshAdminStatus() {
+  refreshAdminStatus(data: IJWTdata) {
+      this.isAdminSubject$.next(data.is_superuser);
+    }
+
+  refreshAuthStatus() {
     const token = localStorage.getItem('accessToken');
     if (token) {
       const tokenData = this.decodeToken(token);
+      this.isAuthenticatedSubject.next(this.hasToken());
       if (tokenData) {
-        this.isAdminSubject$.next(tokenData.is_superuser);
+        this.refreshAdminStatus(tokenData);
+        this.userId$.next(tokenData.user_id);
       }
     }
-  }
-
-  refreshAuthStatus() {
-    this.isAuthenticatedSubject.next(this.hasToken());
-    this.refreshAdminStatus();
   }
 }

@@ -8,6 +8,7 @@ import {
   IFindCardsByUserDto,
   IFindCardsByUserResponse,
 } from '../../shared/card/find-cards-by-user.interface';
+import { IFindCardsByFilterDto, IFindCardsByFilterResponse } from '../../shared/card/find-cards-by-filter.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +28,16 @@ export class CardService {
       findCardsByUserDto
     );
   }
-  // Add the following methods
+
+  findCardsByFilter(
+    findCardsByFilterDto: IFindCardsByFilterDto
+  ): Observable<IFindCardsByFilterResponse> {
+    const findCardsByFilterUrl = `${this.apiUrl}${CardRoutes.FIND_CARDS_BY_FILTER}`;
+    return this.http.post<IFindCardsByFilterResponse>(
+      findCardsByFilterUrl,
+      findCardsByFilterDto
+    );
+  }
 
   getAllCards(): Observable<ICard[]> {
     const url = `${this.apiUrl}api/cards/`;
