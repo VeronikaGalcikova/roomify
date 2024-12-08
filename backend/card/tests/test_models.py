@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+from django.utils.timezone import now
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from card.models import Card
@@ -11,10 +13,17 @@ class CardModelTest(TestCase):
 
     def test_create_card(self):
         """Test that a Card instance can be created successfully."""
-        card = Card.objects.create(user=self.user, card_id=self.card_id, allowed=True)
+        expiration_date = "2025-12-05T11:05:25.987730+01:00"
+
+        card = Card.objects.create(
+            user=self.user,
+            card_id=self.card_id,
+            expiration_date=expiration_date
+        )
+
         self.assertEqual(card.user, self.user)
         self.assertEqual(card.card_id, self.card_id)
-        self.assertTrue(card.allowed)
+        self.assertEqual(card.expiration_date, expiration_date)
         self.assertIsNotNone(card.uid)
 
     def test_card_string_representation(self):
@@ -34,10 +43,19 @@ class CardModelTest(TestCase):
         card2 = Card.objects.create(user=self.user, card_id="Card2")
         self.assertNotEqual(card1.uid, card2.uid)
 
-    def test_allowed_default_value(self):
-        """Test that the default value of allowed is False."""
+    def test_expiration_date_default_value(self):
+        """Test that the default value of expiration_date is one year from now."""
         card = Card.objects.create(user=self.user, card_id=self.card_id)
-        self.assertFalse(card.allowed)
+
+        # Calculate expected default expiration date
+        expected_expiration_date = now() + timedelta(days=365)
+
+        # Allow for slight difference in timing (1 second)
+        self.assertAlmostEqual(
+            card.expiration_date,
+            expected_expiration_date,
+            delta=timedelta(seconds=1)
+        )
 
     def test_foreign_key_relationship(self):
         """Test the foreign key relationship between Card and User."""

@@ -9,30 +9,30 @@ class RoomReaderAPITests(APITestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.User = None
-        self.user = None
+        self.superuser = None
         self.room_reader = None
         self.room_reader_list_url = None
         self.room_reader_detail_url = None
 
     def setUp(self):
         self.User = get_user_model()
-        self.user = self.User.objects.create_user(username="test_user", password="password")
-        self.room_reader = RoomReader.objects.create(name="Main Entrance", ip="192.168.1.1", reader_state=True)
+        self.superuser = self.User.objects.create_user(username="test_user", password="password", is_superuser=True)
+        self.room_reader = RoomReader.objects.create(name="Main Entrance", ip="192.168.1.1", active=True)
         self.room_reader_list_url = reverse("roomreader-list")
         self.room_reader_detail_url = reverse("roomreader-detail", kwargs={"pk": self.room_reader.uid})
 
     def _authenticate(self):
         """Authenticate user."""
-        self.client.force_authenticate(user=self.user)
+        self.client.force_authenticate(user=self.superuser)
 
     def _create_room_reader(self):
         """Create a new room reader via POST request."""
-        data = {"name": "Back Entrance", "ip": "192.168.1.2", "reader_state": True}
+        data = {"name": "Back Entrance", "ip": "192.168.1.2", "active": True}
         return self.client.post(self.room_reader_list_url, data), data
 
     def _full_update_room_reader(self):
         """Fully update a room reader via PUT request."""
-        data = {"name": "Updated Entrance", "ip": "192.168.1.3", "reader_state": False}
+        data = {"name": "Updated Entrance", "ip": "192.168.1.3", "active": False}
         return self.client.put(self.room_reader_detail_url, data), data
 
     def _partial_update_room_reader(self):

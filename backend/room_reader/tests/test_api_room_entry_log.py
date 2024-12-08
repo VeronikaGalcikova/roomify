@@ -10,7 +10,7 @@ class RoomEntryLogAPITests(APITestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.User = None
-        self.user = None
+        self.superuser = None
         self.card = None
         self.room_reader = None
         self.room_entry_log = None
@@ -19,16 +19,16 @@ class RoomEntryLogAPITests(APITestCase):
 
     def setUp(self):
         self.User = get_user_model()
-        self.user = self.User.objects.create_user(username="testuser", password="password")
-        self.card = Card.objects.create(user=self.user, card_id="123ABC")
-        self.room_reader = RoomReader.objects.create(name="Main Entrance", ip="192.168.1.1", reader_state=True)
+        self.superuser = self.User.objects.create_user(username="testuser", password="password", is_superuser=True)
+        self.card = Card.objects.create(user=self.superuser, card_id="123ABC")
+        self.room_reader = RoomReader.objects.create(name="Main Entrance", ip="192.168.1.1")
         self.room_entry_log = RoomEntryLog.objects.create(card=self.card, reader=self.room_reader, log_type="entry")
         self.room_entry_log_list_url = reverse("roomentrylog-list")
         self.room_entry_log_detail_url = reverse("roomentrylog-detail", kwargs={"pk": self.room_entry_log.id})
 
     def _authenticate(self):
         """Authenticate user."""
-        self.client.force_authenticate(user=self.user)
+        self.client.force_authenticate(user=self.superuser)
 
     def _create_room_entry_log(self):
         """Create a new room entry log via POST request."""
