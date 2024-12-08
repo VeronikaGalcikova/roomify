@@ -16,6 +16,8 @@ export class AuthService {
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   isAdminSubject$ = new BehaviorSubject<boolean>(false);
   isAdmin$ = this.isAdminSubject$.asObservable();
+  userId$ = new BehaviorSubject<number | null>(null);
+  userIdSubject$ = this.userId$.asObservable();
   
   constructor(private http: HttpClient, @Inject(API_URL) private apiUrl: string) {}
 
@@ -33,6 +35,7 @@ export class AuthService {
         localStorage.setItem('refreshToken', response.refresh);
         const tokenData = this.decodeToken(response.access);
         if (tokenData) {
+          this.userId$.next(tokenData.user_id);
           this.isAdminSubject$.next(tokenData.is_superuser);
         }
         this.isAuthenticatedSubject.next(true);

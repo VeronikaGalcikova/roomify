@@ -104,7 +104,7 @@ table tr:last-child td:last-child {
   border-radius: 3px;
 }
 
-.filter-row input:focus {
+.filter-row input:focus, form input:focus, form select:focus {
   outline: none;
   border-color: #1abc9c; /* Optional: Change border color on focus */
 }
@@ -150,19 +150,23 @@ button:hover {
   opacity: 0.9;
 }
 
-form {
-  max-width: 400px;
-  margin: 20px 0;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-}
-
 form label {
   display: block;
-  margin: 10px 0 5px;
+  margin: 5px 0 5px;
   font-weight: bold;
+  font-size: small;
+  color: gray;
+  text-transform: uppercase;
+}
+
+.submit-button {
+  background-color: #1abc9c;
+  color: white;
+} 
+
+.cancel-button {
+  background-color: #ccc;
+  color: white;
 }
 
 form input,
@@ -173,10 +177,6 @@ form select {
   border: 1px solid #ddd;
   border-radius: 3px;
   box-sizing: border-box;
-}
-
-form button {
-  width: 100px;
 }
 
 .snackbar-success {

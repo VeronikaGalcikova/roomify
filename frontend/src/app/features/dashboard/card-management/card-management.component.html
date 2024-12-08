@@ -55,7 +55,7 @@
 <div *ngIf="isEditing || selectedCard">
   <form (ngSubmit)="isEditing ? updateCard() : addCard(selectedCard!)">
     <!-- User ID Dropdown -->
-    <label>User:</label>
+    <label>User</label>
     <select
       [(ngModel)]="selectedCard!.user"
       name="user"
@@ -67,7 +67,7 @@
       </option>
     </select>
 
-    <label>Card ID:</label>
+    <label>Card ID</label>
     <input
       [(ngModel)]="selectedCard!.card_id"
       name="card_id"
@@ -76,15 +76,16 @@
     />
 
     <!-- TODO: prerobit na exp -->
-    <label>Allowed:</label>
+    <label>Allowed</label>
     <select [(ngModel)]="selectedCard!.expiration_date" name="allowed" required>
       <option [ngValue]="true">Yes</option>
       <option [ngValue]="false">No</option>
     </select>
-    <button type="submit" (click)="onModalClose()">
+    <div style="display: flex; justify-content: space-between;">
+    <button class="cancel-button" type="button" (click)="cancelEdit(); onModalClose()">Cancel</button>
+    <button type="submit" (click)="onModalClose()" class="submit-button">
       {{ isEditing ? 'Update Card ' + selectedCard!.card_id : 'Add Card' }}
-    </button>
-    <button type="button" (click)="cancelEdit(); onModalClose()">Cancel</button>
+    </button></div>
   </form>
 </div>
 </app-modal>

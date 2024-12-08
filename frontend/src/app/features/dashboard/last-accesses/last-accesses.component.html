@@ -42,6 +42,6 @@
   <button class="pagination-button" (click)="changePage(1)">First</button>
   <button  class="pagination-button" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Prev</button>
   <span style="font-size: 13px; color: rgb(110, 110, 110);">Page {{currentPage}}</span>
-  <button  class="pagination-button" (click)="changePage(currentPage + 1)" [disabled]="users.length !== 25">Next</button>
+  <button  class="pagination-button" (click)="changePage(currentPage + 1)" [disabled]="entryLogs.length !== 25">Next</button>
   <button  class="pagination-button" (click)="changePage(-1)">Last</button>
 </div>

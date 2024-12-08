@@ -45,13 +45,12 @@
 </div>
 
 <app-modal
-  [title]="isEditing ? 'Edit Card' : 'Add Card'"
+  [title]="isEditing ? 'Edit Room Reader' : 'Add Room Reader'"
   [isVisible]="isModalVisible"
   (close)="onModalClose()"
 >
 <!-- Add/Edit Room Reader Form -->
 <div *ngIf="selectedRoomReader">
-  <h2>{{ isEditing ? "Edit Room Reader" : "Add Room Reader" }}</h2>
   <form
     (ngSubmit)="
       isEditing ? updateRoomReader() : createRoomReader(selectedRoomReader)

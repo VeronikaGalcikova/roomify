@@ -53,14 +53,12 @@
 </div>
 
 <app-modal
-  [title]="isEditing ? 'Edit Card' : 'Add Card'"
+  [title]="isEditing ? 'Edit User' : 'Add User'"
   [isVisible]="isModalVisible"
   (close)="onModalClose()"
 >
   <!-- Add/Edit User Form -->
   <div *ngIf="isEditing || selectedUser">
-    <h2 *ngIf="!isEditing">Add User</h2>
-    <h2 *ngIf="isEditing">Edit User</h2>
     <form (ngSubmit)="isEditing ? updateUser() : addUser(selectedUser!)">
       <label>Username:</label>
       <input [(ngModel)]="selectedUser!.username" name="username" required />

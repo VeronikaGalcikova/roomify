@@ -82,6 +82,13 @@ nav .logo {
   cursor: pointer;
 }
 
+.profile-img {
+  cursor: pointer;
+  width: 44px;
+  height: auto;
+  margin-right: 0.5em; /* Space between the logo image and text */
+}
+
 .logo {
   display: flex;
   align-items: center;

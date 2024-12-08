@@ -4,8 +4,7 @@ import { LoginComponent } from './features/login/login.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { AccessSimulationComponent } from './features/access-simulation/access-simulation.component';
 import { AuthGuard } from './core/auth.guard';
-import { UserManagementComponent } from './features/dashboard/user-management/user-management.component';
-import { CardManagementComponent } from './features/dashboard/card-management/card-management.component';
+import { ProfileComponent } from './features/profile/profile.component';
 
 export const routes: Routes = [
   { path: 'registration', component: RegistrationComponent },
@@ -14,15 +13,15 @@ export const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuard],
-    children: [
-      { path: 'user-management', component: UserManagementComponent },
-      { path: 'card-management', component: CardManagementComponent },
-      // Add other child routes here
-    ],
   },
   {
     path: 'access-simulation',
     component: AccessSimulationComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
     canActivate: [AuthGuard],
   },
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },

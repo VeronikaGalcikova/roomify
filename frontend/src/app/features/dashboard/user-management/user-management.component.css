@@ -175,10 +175,6 @@ form input {
   box-sizing: border-box;
 }
 
-form button {
-  width: 100px;
-}
-
 .snackbar-success {
   background-color: #4caf50 !important;
   color: #fff !important;
