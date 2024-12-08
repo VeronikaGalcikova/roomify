@@ -4,11 +4,12 @@ import { IUser } from '../../../shared/user/get-all-users.interface';
 import { UserService } from '../../../services/user/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ModalComponent } from '../../shared/modal/modal.component';
 
 @Component({
   selector: 'app-user-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ModalComponent],
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.css'],
 })
@@ -17,6 +18,14 @@ export class UserManagementComponent implements OnInit {
   selectedUser: IUser | null = null;
   errorMessage: string = '';
   isEditing: boolean = false;
+  isModalVisible = false;
+
+  filter: IFilter = {
+    id: null,
+    username: '',
+    email: '',
+  };
+  currentPage: number = 1;
 
   constructor(
     private userService: UserService,
@@ -24,11 +33,27 @@ export class UserManagementComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadUsers();
+    this.loadUsers(1, 25);
   }
 
-  loadUsers(): void {
-    this.userService.getAllUsers().subscribe({
+  showModal() {
+    this.isModalVisible = true;
+  }
+
+  onModalClose() {
+    this.isModalVisible = false;
+  }
+  
+  loadUsers(page: number, limit: number): void {
+    const findUsersByFilterDto = {
+      page,
+      limit,
+      id: this.filter.id ? parseInt(this.filter.id) : undefined,
+      username: this.filter.username || undefined,
+      email: this.filter.email || undefined,
+    };
+    console.log(findUsersByFilterDto);
+    this.userService.findUsersByFilter(findUsersByFilterDto).subscribe({
       next: (users) => {
         this.users = users;
       },
@@ -44,7 +69,7 @@ export class UserManagementComponent implements OnInit {
   addUser(newUser: IUser): void {
     this.userService.createUser(newUser).subscribe({
       next: () => {
-        this.loadUsers();
+        this.loadUsers(this.currentPage, 25);
         this.cancelEdit();
         this.showSuccessMessage('User added successfully!');
       },
@@ -70,7 +95,7 @@ export class UserManagementComponent implements OnInit {
           next: () => {
             this.isEditing = false;
             this.selectedUser = null;
-            this.loadUsers();
+            this.loadUsers(this.currentPage, 25);
             this.showSuccessMessage('User updated successfully!');
           },
           error: (error) => {
@@ -85,7 +110,7 @@ export class UserManagementComponent implements OnInit {
   deleteUser(userId: number): void {
     this.userService.deleteUser(userId).subscribe({
       next: () => {
-        this.loadUsers();
+        this.loadUsers(1, 25);
         this.showSuccessMessage('User deleted successfully!');
       },
       error: (error) => {
@@ -128,4 +153,22 @@ export class UserManagementComponent implements OnInit {
       panelClass: ['snackbar-error'],
     });
   }
+
+
+  // Function to change the page
+  changePage(page: number) {
+    this.currentPage = page;
+    this.loadUsers(page, 25);
+  }
+
+  onFilterChange() {
+    this.currentPage = 1;
+    this.loadUsers(1, 25);
+  }
+}
+
+export interface IFilter {
+  id?: string | null;
+  username?: string;
+  email?: string;
 }

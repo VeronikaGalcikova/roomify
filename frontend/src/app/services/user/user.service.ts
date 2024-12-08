@@ -7,6 +7,7 @@ import {
 } from '../../shared/user/get-all-users.interface';
 import { Observable } from 'rxjs';
 import { UserRoutes } from '../../shared/user/routes.enum';
+import { IFindUsersByFilterDto, IFindUsersByFilterResponse } from '../../shared/user/find-users-by-filter.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,11 @@ export class UserService {
   getAllUsers(): Observable<IGetAllUsersResponse> {
     const loginUrl = `${this.apiUrl}${UserRoutes.GET_ALL_USERS}`;
     return this.http.get<IGetAllUsersResponse>(loginUrl);
+  }
+
+  findUsersByFilter(findUsersByFilterDto: IFindUsersByFilterDto): Observable<IFindUsersByFilterResponse> {
+    const url = `${this.apiUrl}${UserRoutes.FIND_USERS_BY_FILTER}/`;
+    return this.http.post<IFindUsersByFilterResponse>(url, findUsersByFilterDto);
   }
 
   createUser(user: IUser): Observable<IUser> {

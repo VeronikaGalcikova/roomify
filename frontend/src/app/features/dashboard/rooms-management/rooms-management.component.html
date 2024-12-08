@@ -3,7 +3,7 @@
     <h1>Rooms Management</h1>
     <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
   </div>
-  <img src="./add.png" alt="Add New Room Reader" (click)="initiateAdd()" title="Add New Room Reader" style="width: 30px; height: 30px; cursor: pointer;">
+  <img src="./add.png" alt="Add New Room Reader" (click)="initiateAdd(); showModal();" title="Add New Room Reader" style="width: 30px; height: 30px; cursor: pointer;">
 </div>
 
 <!-- Room Readers Table -->
@@ -17,18 +17,38 @@
     </tr>
   </thead>
   <tbody>
+    <tr class="filter-row">
+      <td><input [(ngModel)]="filter.name" type="text" placeholder="Filter by Name" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.ip" type="text" placeholder="Filter by IP" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.reader_state" type="text" placeholder="Filter by State" (change)="onFilterChange()"></td>
+      <td></td>
+    </tr>
     <tr *ngFor="let reader of roomReaders">
       <td>{{ reader.name }}</td>
       <td>{{ reader.ip }}</td>
       <td>{{ reader.reader_state ? "Active" : "Inactive" }}</td>
       <td class="align-end" style="gap: 20px; display: flex; justify-content: flex-end;">
-        <img src="./editing.png" alt="Edit Room Reader" (click)="initiateEdit(reader)" title="Edit Room Reader" style="width: 25px; height: 25px; cursor: pointer;">
+        <img src="./editing.png" alt="Edit Room Reader" (click)="initiateEdit(reader); showModal();" title="Edit Room Reader" style="width: 25px; height: 25px; cursor: pointer;">
         <img src="./bin.png" alt="Delete Room Reader" (click)="deleteRoomReader(reader.uid)" title="Delete Room Reader" style="width: 25px; height: 25px; cursor: pointer;">
       </td>
     </tr>
   </tbody>
 </table>
 
+<!-- Pagination Controls -->
+<div class="pagination">
+  <button class="pagination-button" (click)="changePage(1)">First</button>
+  <button  class="pagination-button" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Prev</button>
+  <span style="font-size: 13px; color: rgb(110, 110, 110);">Page {{currentPage}}</span>
+  <button  class="pagination-button" (click)="changePage(currentPage + 1)" [disabled]="roomReaders.length !== 25">Next</button>
+  <button  class="pagination-button" (click)="changePage(-1)">Last</button>
+</div>
+
+<app-modal
+  [title]="isEditing ? 'Edit Card' : 'Add Card'"
+  [isVisible]="isModalVisible"
+  (close)="onModalClose()"
+>
 <!-- Add/Edit Room Reader Form -->
 <div *ngIf="selectedRoomReader">
   <h2>{{ isEditing ? "Edit Room Reader" : "Add Room Reader" }}</h2>
@@ -53,7 +73,9 @@
       <option [ngValue]="false">Inactive</option>
     </select>
 
-    <button type="submit">{{ isEditing ? "Update" : "Create" }}</button>
-    <button type="button" (click)="cancelEdit()">Cancel</button>
+    <button type="submit" (click)="onModalClose()">{{ isEditing ? "Update" : "Create" }}</button>
+    <button type="button" (click)="cancelEdit(); onModalClose()">Cancel</button>
   </form>
 </div>
+</app-modal>
+

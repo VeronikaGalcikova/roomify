@@ -3,7 +3,7 @@
     <h1>Card Management</h1>
     <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
   </div>
-  <img src="./add.png" alt="Add New Card" (click)="initiateAddCard()" title="Add New Card" style="width: 30px; height: 30px; cursor: pointer;">
+  <img src="./add.png" alt="Add New Card" (click)="initiateAddCard(); showModal();" title="Add New Card" style="width: 30px; height: 30px; cursor: pointer;">
 </div>
 <!-- Cards Table -->
 <table>
@@ -11,29 +11,48 @@
     <tr>
       <th>ID</th>
       <th>Card Name</th>
-      <th>Allowed</th>
+      <th>Expiration</th>
       <th>User ID</th>
       <th style="display: flex; justify-content: flex-end;">Actions</th>
     </tr>
   </thead>
   <tbody>
+    <tr class="filter-row">
+      <td><input [(ngModel)]="filter.id" type="text" placeholder="Filter by ID" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.card_id" type="text" placeholder="Filter by Name" (change)="onFilterChange()"></td>
+      <td></td>
+      <td><input [(ngModel)]="filter.user_id" type="text" placeholder="Filter by User ID" (change)="onFilterChange()"></td>
+      <td></td>
+    </tr>
     <tr *ngFor="let card of cards">
       <td>{{ card.uid }}</td>
       <td>{{ card.card_id }}</td>
-      <td>{{ card.allowed ? "Yes" : "No" }}</td>
+      <td>{{ card.expiration_date | date: 'longDate' }}</td>
       <td>{{ card.user }}</td>
       <td class="align-end" style="gap: 20px; display: flex; justify-content: flex-end;">
-        <img src="./editing.png" alt="Edit Card" (click)="editCard(card)" title="Edit Card" style="width: 25px; height: 25px; cursor: pointer;">
-        <img src="./bin.png" alt="Delete Card" (click)="deleteCard(card.uid)" title="Delete Card" style="width: 25px; height: 25px; cursor: pointer;">
+        <img src="./editing.png" alt="Edit Card" (click)="editCard(card); showModal();" title="Edit Card" style="width: 25px; height: 25px; cursor: pointer;">
+        <img src="./bin.png" alt="Delete Card" (click)="deleteCard(card.uid);" title="Delete Card" style="width: 25px; height: 25px; cursor: pointer;">
       </td>
     </tr>
   </tbody>
 </table>
 
-<!-- Add/Edit Card Form -->
+<!-- Pagination Controls -->
+<div class="pagination">
+  <button class="pagination-button" (click)="changePage(1)">First</button>
+  <button  class="pagination-button" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Prev</button>
+  <span style="font-size: 13px; color: rgb(110, 110, 110);">Page {{currentPage}}</span>
+  <button  class="pagination-button" (click)="changePage(currentPage + 1)" [disabled]="users.length !== 25">Next</button>
+  <button  class="pagination-button" (click)="changePage(-1)">Last</button>
+</div>
+
+<app-modal
+  [title]="isEditing ? 'Edit Card' : 'Add Card'"
+  [isVisible]="isModalVisible"
+  (close)="onModalClose()"
+>
+  <!-- Add/Edit Card Form -->
 <div *ngIf="isEditing || selectedCard">
-  <h2 *ngIf="!isEditing">Add Card</h2>
-  <h2 *ngIf="isEditing">Edit Card</h2>
   <form (ngSubmit)="isEditing ? updateCard() : addCard(selectedCard!)">
     <!-- User ID Dropdown -->
     <label>User:</label>
@@ -56,15 +75,16 @@
       required
     />
 
+    <!-- TODO: prerobit na exp -->
     <label>Allowed:</label>
-    <select [(ngModel)]="selectedCard!.allowed" name="allowed" required>
+    <select [(ngModel)]="selectedCard!.expiration_date" name="allowed" required>
       <option [ngValue]="true">Yes</option>
       <option [ngValue]="false">No</option>
     </select>
-
-    <button type="submit">
-      {{ isEditing ? "Update Card" : "Add Card" }}
+    <button type="submit" (click)="onModalClose()">
+      {{ isEditing ? 'Update Card ' + selectedCard!.card_id : 'Add Card' }}
     </button>
-    <button type="button" (click)="cancelEdit()">Cancel</button>
+    <button type="button" (click)="cancelEdit(); onModalClose()">Cancel</button>
   </form>
 </div>
+</app-modal>

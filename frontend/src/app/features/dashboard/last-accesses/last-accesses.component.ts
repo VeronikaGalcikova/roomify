@@ -12,13 +12,15 @@ import { IUser } from '../../../shared/user/get-all-users.interface';
 import { ICard } from '../../../shared/card/find-cards-by-user.interface';
 import { RoomReaderService } from '../../../services/room-reader/room-reader.service';
 import { IRoomReader } from '../../../shared/room-reader/get-all-users.interface';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-last-accesses',
   templateUrl: './last-accesses.component.html',
   styleUrls: ['./last-accesses.component.css'],
   standalone: true,
-  imports: [CommonModule, MatSnackBarModule],
+  imports: [CommonModule, FormsModule, MatSnackBarModule],
 })
 export class LastAccessesComponent implements OnInit {
   entryLogs: IRoomEntryLog[] = [];
@@ -36,6 +38,16 @@ export class LastAccessesComponent implements OnInit {
   cardMap: { [key: string]: number } = {}; // card.uid to user.id
   roomReaders: IRoomReader[] = [];
   readerMap: { [key: string]: string } = {}; // reader.uid to reader.name
+  
+  filter: IFilter = {
+    id: null,
+    username: '',
+    card_id: '',
+    reader_id: '',
+    reader_name: '',
+    type: '',
+  };
+  currentPage: number = 1;
 
   constructor(
     private roomEntryLogService: RoomEntryLogService,
@@ -49,7 +61,7 @@ export class LastAccessesComponent implements OnInit {
     this.fetchUsers()
       .then(() => this.fetchCards())
       .then(() => this.fetchRoomReaders())
-      .then(() => this.fetchEntryLogs())
+      .then(() => this.fetchEntryLogs(1, 25))
       .catch((error) => {
         console.error('Initialization error:', error);
       });
@@ -115,7 +127,7 @@ export class LastAccessesComponent implements OnInit {
     });
   }
 
-  fetchEntryLogs(): void {
+  fetchEntryLogs(page: number, limit: number): void {
     this.roomEntryLogService.getEntryLogs().subscribe({
       next: (logs) => {
         console.log('Fetched Entry Logs:', logs);
@@ -132,83 +144,6 @@ export class LastAccessesComponent implements OnInit {
     });
   }
 
-  deleteLog(id: number): void {
-    if (confirm('Are you sure you want to delete this log?')) {
-      this.roomEntryLogService.deleteEntryLog(id).subscribe({
-        next: () => {
-          this.entryLogs = this.entryLogs.filter((log) => log.id !== id);
-          this.successMessage = 'Entry log deleted successfully!';
-          this.showSnackBar(this.successMessage, 'success');
-        },
-        error: () => {
-          this.errorMessage = 'Failed to delete entry log.';
-          this.showSnackBar(this.errorMessage, 'error');
-        },
-      });
-    }
-  }
-
-  createLog(): void {
-    if (!this.newLog.card || !this.newLog.reader || !this.newLog.log_type) {
-      this.errorMessage = 'All fields are required.';
-      this.showSnackBar(this.errorMessage, 'error');
-      return;
-    }
-
-    this.roomEntryLogService.createEntryLog(this.newLog).subscribe({
-      next: (log) => {
-        this.entryLogs.push(log);
-        this.successMessage = 'Entry log created successfully!';
-        this.showSnackBar(this.successMessage, 'success');
-        this.resetNewLog();
-      },
-      error: () => {
-        this.errorMessage = 'Failed to create entry log.';
-        this.showSnackBar(this.errorMessage, 'error');
-      },
-    });
-  }
-
-  updateLog(): void {
-    if (this.selectedLog) {
-      this.roomEntryLogService
-        .updateEntryLog(this.selectedLog.id, this.selectedLog)
-        .subscribe({
-          next: (log) => {
-            const index = this.entryLogs.findIndex((l) => l.id === log.id);
-            if (index !== -1) {
-              this.entryLogs[index] = log;
-            }
-            this.successMessage = 'Entry log updated successfully!';
-            this.showSnackBar(this.successMessage, 'success');
-            this.selectedLog = null;
-          },
-          error: () => {
-            this.errorMessage = 'Failed to update entry log.';
-            this.showSnackBar(this.errorMessage, 'error');
-          },
-        });
-    }
-  }
-
-  selectLog(log: IRoomEntryLog): void {
-    this.selectedLog = { ...log };
-  }
-
-  cancelEdit(): void {
-    this.selectedLog = null;
-    this.errorMessage = '';
-    this.successMessage = '';
-  }
-
-  private resetNewLog(): void {
-    this.newLog = {
-      card: '',
-      reader: '',
-      log_type: 'entry',
-    };
-  }
-
   private showSnackBar(message: string, type: 'success' | 'error'): void {
     this.snackBar.open(message, 'Close', {
       duration: 3000,
@@ -216,4 +151,30 @@ export class LastAccessesComponent implements OnInit {
         type === 'success' ? ['snackbar-success'] : ['snackbar-error'],
     });
   }
+
+  // Function to change the page
+  changePage(page: number) {
+    this.currentPage = page;
+    this.fetchUsers()
+      .then(() => this.fetchCards())
+      .then(() => this.fetchRoomReaders())
+      .then(() => this.fetchEntryLogs(page, 25))
+    }
+
+  onFilterChange() {
+    this.currentPage = 1;
+    this.fetchUsers()
+      .then(() => this.fetchCards())
+      .then(() => this.fetchRoomReaders())
+      .then(() => this.fetchEntryLogs(this.currentPage, 25))
+      }
+}
+
+export interface IFilter {
+  id?: string | null;
+  card_id?: string;
+  username?: string;
+  reader_id?: string;
+  reader_name?: string;
+  type?: string;
 }

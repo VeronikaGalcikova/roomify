@@ -4,7 +4,7 @@
     <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
   </div>
   <!-- <button (click)="initiateAddCard()">Add New Card</button> -->
-  <img src="./add.png" alt="Add New User" (click)="initiateAddUser()" title="Add New User" style="width: 30px; height: 30px; cursor: pointer;">
+  <img src="./add.png" alt="Add New User" (click)="initiateAddUser(); showModal();" title="Add New User" style="width: 30px; height: 30px; cursor: pointer;">
 </div>
 
 <!-- Users Table -->
@@ -20,6 +20,15 @@
     </tr>
   </thead>
   <tbody>
+    <!-- Filter Row -->
+    <tr class="filter-row">
+      <td><input [(ngModel)]="filter.id" type="text" placeholder="Filter by ID" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.username" type="text" placeholder="Filter by Username" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.email" type="text" placeholder="Filter by Email" (change)="onFilterChange()"></td>
+      <td></td>
+      <td></td>
+      <td></td> <!-- Empty cell for the Actions column -->
+    </tr>
     <tr *ngFor="let user of users">
       <td>{{ user.id }}</td>
       <td>{{ user.username }}</td>
@@ -27,41 +36,57 @@
       <td>{{ user.first_name }}</td>
       <td>{{ user.last_name }}</td>
       <td class="align-end" style="gap: 20px; display: flex; justify-content: flex-end;">
-        <img src="./editing.png" alt="Edit Card" (click)="editUser(user)" title="Edit User" style="width: 25px; height: 25px; cursor: pointer;">
+        <img src="./editing.png" alt="Edit Card" (click)="editUser(user); showModal();" title="Edit User" style="width: 25px; height: 25px; cursor: pointer;">
         <img src="./bin.png" alt="Delete Card" (click)="deleteUser(user.id)" title="Delete User" style="width: 25px; height: 25px; cursor: pointer;">
       </td>
     </tr>
   </tbody>
 </table>
 
-<!-- Add/Edit User Form -->
-<div *ngIf="isEditing || selectedUser">
-  <h2 *ngIf="!isEditing">Add User</h2>
-  <h2 *ngIf="isEditing">Edit User</h2>
-  <form (ngSubmit)="isEditing ? updateUser() : addUser(selectedUser!)">
-    <label>Username:</label>
-    <input [(ngModel)]="selectedUser!.username" name="username" required />
-
-    <label>First Name:</label>
-    <input [(ngModel)]="selectedUser!.first_name" name="first_name" required />
-
-    <label>Last Name:</label>
-    <input [(ngModel)]="selectedUser!.last_name" name="last_name" required />
-
-    <label>Email:</label>
-    <input [(ngModel)]="selectedUser!.email" name="email" required />
-
-    <label>Password:</label>
-    <input
-      [(ngModel)]="selectedUser!.password"
-      name="password"
-      type="password"
-      required
-    />
-
-    <button type="submit">
-      {{ isEditing ? "Update User" : "Add User" }}
-    </button>
-    <button type="button" (click)="cancelEdit()">Cancel</button>
-  </form>
+<!-- Pagination Controls -->
+<div class="pagination">
+  <button class="pagination-button" (click)="changePage(1)">First</button>
+  <button  class="pagination-button" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Prev</button>
+  <span style="font-size: 13px; color: rgb(110, 110, 110);">Page {{currentPage}}</span>
+  <button  class="pagination-button" (click)="changePage(currentPage + 1)" [disabled]="users.length !== 25">Next</button>
+  <button  class="pagination-button" (click)="changePage(-1)">Last</button>
 </div>
+
+<app-modal
+  [title]="isEditing ? 'Edit Card' : 'Add Card'"
+  [isVisible]="isModalVisible"
+  (close)="onModalClose()"
+>
+  <!-- Add/Edit User Form -->
+  <div *ngIf="isEditing || selectedUser">
+    <h2 *ngIf="!isEditing">Add User</h2>
+    <h2 *ngIf="isEditing">Edit User</h2>
+    <form (ngSubmit)="isEditing ? updateUser() : addUser(selectedUser!)">
+      <label>Username:</label>
+      <input [(ngModel)]="selectedUser!.username" name="username" required />
+
+      <label>First Name:</label>
+      <input [(ngModel)]="selectedUser!.first_name" name="first_name" required />
+
+      <label>Last Name:</label>
+      <input [(ngModel)]="selectedUser!.last_name" name="last_name" required />
+
+      <label>Email:</label>
+      <input [(ngModel)]="selectedUser!.email" name="email" required />
+
+      <label>Password:</label>
+      <input
+        [(ngModel)]="selectedUser!.password"
+        name="password"
+        type="password"
+        required
+      />
+
+      <button type="submit" (click)="onModalClose()">
+        {{ isEditing ? "Update User" : "Add User" }}
+      </button>
+      <button type="button" (click)="cancelEdit(); onModalClose()">Cancel</button>
+    </form>
+  </div>
+</app-modal>
+

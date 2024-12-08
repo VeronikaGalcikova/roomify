@@ -92,6 +92,51 @@ table tr:last-child td:first-child {
 table tr:last-child td:last-child {
   border-bottom-right-radius: 10px; /* Round bottom-right corner */
 }
+.filter-row th {
+  border-top: 2px solid #ddd; /* Line under header */
+}
+
+.filter-row input {
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.filter-row input:focus {
+  outline: none;
+  border-color: #1abc9c; /* Optional: Change border color on focus */
+}
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-button {
+  padding: 3px 12px;
+  margin: 0 5px;
+  cursor: pointer;
+  background-color: #1abc9c;
+  color: white;
+  border: none;
+  border-radius: 3px;
+}
+
+.pagination-button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  align-self: center;
+  font-size: 16px;
+  margin: 0 10px;
+}
+
 /* Button Styles */
 button {
   padding: 8px 16px;
