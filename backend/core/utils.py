@@ -67,3 +67,29 @@ def paginate_queryset(queryset, page, limit):
     end = start + limit
 
     return queryset[start:end]
+
+
+def filter_and_paginate_queryset(view_set, filters, page, limit):
+    """
+    Filters the queryset of a view_set, applies pagination, and serializes the results.
+
+    Args:
+        view_set (ViewSet): The ViewSet instance calling this function.
+        filters (Q): Filters to apply to the queryset.
+        page (int): The page number for pagination.
+        limit (int): The number of items per page.
+
+    Returns:
+        Response: The paginated and serialized response.
+    """
+    # Access the queryset from the view_set
+    queryset = view_set.queryset.filter(filters)
+
+    # Apply pagination
+    paginated_result = paginate_queryset(queryset, page, limit)
+
+    # Serialize the paginated results using the view_set's serializer
+    serializer = view_set.get_serializer(paginated_result, many=True)
+
+    # Return the paginated and serialized response
+    return Response(serializer.data, status=status.HTTP_200_OK)

@@ -6,7 +6,7 @@ from rest_framework.decorators import action
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.db.models import Q
 from core.permissions import IsSuperUserOrReadOnly
-from core.utils import validate_pagination_params, paginate_queryset
+from core.utils import validate_pagination_params, paginate_queryset, filter_and_paginate_queryset
 
 
 class CardViewSet(viewsets.ModelViewSet):
@@ -45,16 +45,9 @@ class CardViewSet(viewsets.ModelViewSet):
         page = pagination['page']
         limit = pagination['limit']
 
-        # Get optional filter parameters
-        card_id = request.data.get('card_id')
-        card_uid = request.data.get('card_uid')
-        user_id = request.data.get('user_id')
-        user_name = request.data.get('user_name')
-
-        # Apply filters based on optional parameters
+        # Build filters based on optional parameters
         filters = Q()
-
-        if user_id:
+        if user_id := request.data.get('user_id'):
             try:
                 filters &= Q(user=int(user_id))  # Filter by exact user ID
             except ValueError:
@@ -63,19 +56,14 @@ class CardViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-        if user_name:
+        if user_name := request.data.get('user_name'):
             filters &= Q(user__username__icontains=user_name)  # Filter by username containing the substring
 
-        if card_id:
+        if card_id := request.data.get('card_id'):
             filters &= Q(card_id__icontains=card_id)  # Filter by card ID containing the substring
 
-        if card_uid:
+        if card_uid := request.data.get('card_uid'):
             filters &= Q(uid__icontains=card_uid)  # Filter by card UID containing the substring
 
-        # Apply filters to the queryset and paginate it
-        filtered_cards = self.queryset.filter(filters)
-        paginated_cards = paginate_queryset(filtered_cards, page, limit)
-
-        # Serialize and return the response
-        serializer = self.get_serializer(paginated_cards, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        # Apply filters to the queryset, paginate it and return as serialized response
+        return filter_and_paginate_queryset(self, filters, page, limit)

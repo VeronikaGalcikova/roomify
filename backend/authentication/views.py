@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.views import TokenObtainPairView
 from core.permissions import IsSuperUserOnly
+from core.utils import validate_pagination_params, paginate_queryset, filter_and_paginate_queryset
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -20,47 +21,19 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['post'], url_path='filter')
     def get_filtered_users(self, request):
-        # Get pagination parameters
-        page = request.data.get('page')
-        limit = request.data.get('limit')
+        # Validate pagination parameters
+        pagination = validate_pagination_params(request.data.get('page'), request.data.get('limit'))
+        if isinstance(pagination, Response):
+            # If validation fails, return the Response object
+            return pagination
 
-        # Get optional filter parameters
-        user_id = request.data.get('id')
-        username = request.data.get('username')
-        email = request.data.get('email')
+        # Unpack validated values
+        page = pagination['page']
+        limit = pagination['limit']
 
-        # Validate presence of pagination parameters
-        if not page or not limit:
-            return Response(
-                {"detail": "Both 'page' and 'limit' fields are required."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        try:
-            page = int(page)
-            limit = int(limit)
-        except ValueError:
-            return Response(
-                {"detail": "Both 'page' and 'limit' should be integers."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        if limit < 1:
-            return Response(
-                {"detail": "'limit' should be greater than 0."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        if page < 1 and page != -1:
-            return Response(
-                {"detail": "'page' should be greater than 0 or -1."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        # Apply filters based on optional parameters
+        # Build filters based on optional parameters
         filters = Q()
-
-        if user_id:
+        if user_id := request.data.get('id'):
             try:
                 filters &= Q(id=int(user_id))  # Filter by exact ID
             except ValueError:
@@ -69,33 +42,14 @@ class UserViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-        if username:
+        if username := request.data.get('username'):
             filters &= Q(username__icontains=username)  # Filter by username containing the substring
 
-        if email:
+        if email := request.data.get('email'):
             filters &= Q(email__icontains=email)  # Filter by email containing the substring
 
-        # Apply filters to the queryset
-        filtered_users = self.queryset.filter(filters)
-
-        # Get number of users after filtering
-        num_of_users = filtered_users.count()
-
-        if page == -1:
-            # Calculate the last page number
-            last_page = (num_of_users // limit) + (1 if num_of_users % limit != 0 else 0)
-            page = last_page  # Set page to last page
-
-        # Apply pagination
-        start = (page - 1) * limit
-        end = start + limit
-
-        # Slice the filtered queryset
-        users = filtered_users[start:end]
-
-        # Serialize and return the response
-        serializer = self.get_serializer(users, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        # Apply filters to the queryset, paginate it and return as serialized response
+        return filter_and_paginate_queryset(self, filters, page, limit)
     
 
 class RegisterView(APIView):
