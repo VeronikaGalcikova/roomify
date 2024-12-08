@@ -295,7 +295,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"jozo\",\n    \"password\": \"securepassword123\",\n    \"email\": \"newuser@example.com\",\n    \"first_name\": \"New\",\n    \"last_name\": \"User\",\n    \"is_superuser\": true\n}\n",
+							"raw": "{\n    \"username\": \"jozo3\",\n    \"password\": \"securepassword123\",\n    \"email\": \"newuser@example.com\",\n    \"first_name\": \"New\",\n    \"last_name\": \"User\",\n    \"is_superuser\": false\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -463,7 +463,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"updated_username\",\n    \"password\": \"updated_password123\",\n    \"email\": \"updated@example.com\",\n    \"first_name\": \"UpdatedFirst\",\n    \"last_name\": \"UpdatedLast\"\n}",
+							"raw": "{\n    \"username\": \"updated_username\",\n    \"password\": \"updated_password123\",\n    \"email\": \"updated@example.com\",\n    \"first_name\": \"UpdatedFirst\",\n    \"last_name\": \"UpdatedLast\",\n    \"is_superuser\": true\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -508,7 +508,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"first_name\": \"jozef\"\n}",
+							"raw": "{\n    \"is_superuser\": true\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -602,7 +602,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"page\": 1,\n    \"limit\": 25,\n    \"id\": 1,  // optional  \n    \"card_uid\": \"-7\",  // optional\n    \"card_id\": \"123\",  // optional\n    \"reader_name\": \"entrance\",  // optional\n    \"reader_uid\": \"289\",  // optional\n    \"log_type\": \"entry\"   // optional\n}",
+							"raw": "{\n    \"page\": 1,\n    \"limit\": 25,\n    \"id\": 1,  // optional  \n    \"card_uid\": \"-7\",  // optional\n    \"card_id\": \"123\",  // optional\n    \"reader_name\": \"entrance\",  // optional\n    \"reader_uid\": \"289\",  // optional\n    \"user_id\": 4 , // optional\n    \"user_name\": \"user\",  // optional\n    \"log_type\": \"entry\"   // optional\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1486,7 +1486,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjY5MjI1LCJpYXQiOjE3MzM2NjU2MjUsImp0aSI6IjBhMmJjOTFiMDM4YTQ4YjI5MWU3MjZjYmExZDI0OTA1IiwidXNlcl9pZCI6MiwiaXNfc3VwZXJ1c2VyIjp0cnVlfQ.7vm2XPQ_cQSl6n1EEvHI6mOPE8d_Jp8XEr73tNhAlAw",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjg2Mjc3LCJpYXQiOjE3MzM2ODI2NzcsImp0aSI6IjBhYjRlYmUyOWFjMTRjZmVhNDcyMGU0ZTIyNzRkMzQ1IiwidXNlcl9pZCI6MiwiaXNfc3VwZXJ1c2VyIjp0cnVlfQ.4QLmcqV2y5_dxLkOjXsnu-VIguOeYUAGtU_YqwAS0fw",
 				"type": "string"
 			}
 		]
