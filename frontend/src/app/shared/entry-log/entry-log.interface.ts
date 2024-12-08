@@ -10,12 +10,11 @@ export interface IRoomEntryLog {
 
 export interface IFindEntryLogsByFilterDto {
     card_id?: string;
+    user_id?: number;
     reader_id?: string;
     type?: 'entry' | 'exit' | 'denied';
-    start_date?: string;
-    end_date?: string;
-    page?: number;
-    limit?: number;
+    page: number;
+    limit: number;
 }
 
 export interface IFindEntryLogsByFilterResponse extends Array<IRoomEntryLog> {}

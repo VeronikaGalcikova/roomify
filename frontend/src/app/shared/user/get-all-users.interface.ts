@@ -7,4 +7,5 @@ export interface IUser {
   last_name: string;
   id: number;
   password: string;
+  is_superuser: boolean;
 }

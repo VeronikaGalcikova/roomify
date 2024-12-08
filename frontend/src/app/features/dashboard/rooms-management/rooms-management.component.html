@@ -56,13 +56,13 @@
       isEditing ? updateRoomReader() : createRoomReader(selectedRoomReader)
     "
   >
-    <label>Name:</label>
+    <label>Name</label>
     <input [(ngModel)]="selectedRoomReader.name" name="name" required />
 
-    <label>IP Address:</label>
+    <label>IP Address</label>
     <input [(ngModel)]="selectedRoomReader.ip" name="ip" required />
 
-    <label>State:</label>
+    <label>State</label>
     <select
       [(ngModel)]="selectedRoomReader.active"
       name="reader_state"
@@ -72,8 +72,12 @@
       <option [ngValue]="false">Inactive</option>
     </select>
 
-    <button type="submit" (click)="onModalClose()">{{ isEditing ? "Update" : "Create" }}</button>
-    <button type="button" (click)="cancelEdit(); onModalClose()">Cancel</button>
+    <div style="display: flex; justify-content: space-between;">
+      <button class="cancel-button" type="button" (click)="cancelEdit(); onModalClose()">Cancel</button>
+      <button type="submit" (click)="onModalClose()" class="submit-button">
+        {{ isEditing ? 'Update Reader ' : 'Add Reader' }}
+      </button>
+    </div>
   </form>
 </div>
 </app-modal>

@@ -11,15 +11,17 @@ import { RoomReaderService } from '../../services/room-reader/room-reader.servic
 import { IRoomReader } from '../../shared/room-reader/get-all-room-readers.interface';
 import { ICard } from '../../shared/card/find-cards-by-user.interface';
 import { IRoomEntryLog } from '../../shared/entry-log/entry-log.interface';
+import { ModalComponent } from '../shared/modal/modal.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ModalComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
 export class ProfileComponent {
+  isModalVisible = false;
   entryLogs: IRoomEntryLog[] = [];
   public user: IUser = {
     username: '',
@@ -28,6 +30,7 @@ export class ProfileComponent {
     last_name: '',
     id: 0,
     password: '',
+    is_superuser: false,
   };
 
   filter: IFilter = {
@@ -43,6 +46,7 @@ export class ProfileComponent {
   cardMap: { [key: string]: number } = {}; // card.uid to user.id
   roomReaders: IRoomReader[] = [];
   readerMap: { [key: string]: string } = {}; // reader.uid to reader.name
+  selectedCard: ICard | null = null;
 
   constructor(
     private authService: AuthService,
@@ -74,6 +78,19 @@ export class ProfileComponent {
     });
   }
 
+  setSelectedCard(card: ICard) {
+    console.log('Selected Card:', card);
+    this.selectedCard = card;
+  }
+
+  showModal() {
+    this.isModalVisible = true;
+  }
+
+  onModalClose() {
+    this.isModalVisible = false;
+  }
+
   fetchCards(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.cardService
@@ -93,6 +110,14 @@ export class ProfileComponent {
           },
         });
     });
+  }
+
+  requestAccess() {
+    if (this.selectedCard) {
+      console.log('Requesting access for card:', this.selectedCard);
+    } else {
+      console.log('No card selected.');
+    }
   }
 
   fetchRoomReaders(): Promise<void> {
@@ -116,21 +141,27 @@ export class ProfileComponent {
 
   fetchEntryLogs(page: number, limit: number): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.roomEntryLogService.getEntryLogs().subscribe({
-        next: (logs) => {
-          console.log('Fetched Entry Logs:', logs);
-          this.entryLogs = logs.map((log) => ({
-            ...log,
-            userid: this.cardMap[log.card],
-            readerid: log.reader, // Assuming log.reader is reader UID
-          }));
-          resolve();
-        },
-        error: (err) => {
-          console.error('Error fetching entry logs:', err);
-          reject(err);
-        },
-      });
+      this.roomEntryLogService
+        .findEntryLogsByFilter({
+          page,
+          limit,
+          user_id: this.user.id,
+        })
+        .subscribe({
+          next: (logs) => {
+            console.log('Fetched Entry Logs:', logs);
+            this.entryLogs = logs.map((log) => ({
+              ...log,
+              userid: this.cardMap[log.card],
+              readerid: log.reader, // Assuming log.reader is reader UID
+            }));
+            resolve();
+          },
+          error: (err) => {
+            console.error('Error fetching entry logs:', err);
+            reject(err);
+          },
+        });
     });
   }
   // Function to change the page

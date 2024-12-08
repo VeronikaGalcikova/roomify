@@ -182,6 +182,57 @@ h1 {
     font-size: 16px;
     margin: 0 10px;
   }
+
+  .cards-table {
+    max-height: 250px;
+    overflow-y: auto;
+    scrollbar-width: none; /* For Firefox */
+  }
+
+  .cards-table::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+  }
+
+  form label {
+    display: block;
+    margin: 5px 0 5px;
+    font-weight: bold;
+    font-size: small;
+    color: gray;
+    text-transform: uppercase;
+  }
   
+  .submit-button {
+    background-color: #1abc9c;
+    color: white;
+  } 
   
+  .cancel-button {
+    background-color: #ccc;
+    color: white;
+  }
+  
+  form input,
+  form select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    box-sizing: border-box;
+  }
+
+  
+button {
+  padding: 8px 12px;
+  margin: 5px;
+  font-size: 14px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
   

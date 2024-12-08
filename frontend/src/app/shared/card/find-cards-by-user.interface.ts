@@ -5,7 +5,6 @@ export interface IFindCardsByUserDto {
 }
 
 export interface ICard {
-  id: number;
   uid: string;
   card_id: string;
   expiration_date: string;

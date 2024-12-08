@@ -82,10 +82,11 @@
       <option [ngValue]="false">No</option>
     </select>
     <div style="display: flex; justify-content: space-between;">
-    <button class="cancel-button" type="button" (click)="cancelEdit(); onModalClose()">Cancel</button>
-    <button type="submit" (click)="onModalClose()" class="submit-button">
-      {{ isEditing ? 'Update Card ' + selectedCard!.card_id : 'Add Card' }}
-    </button></div>
+      <button class="cancel-button" type="button" (click)="cancelEdit(); onModalClose()">Cancel</button>
+      <button type="submit" (click)="onModalClose()" class="submit-button">
+        {{ isEditing ? 'Update Card ' + selectedCard!.card_id : 'Add Card' }}
+      </button>
+    </div>
   </form>
 </div>
 </app-modal>

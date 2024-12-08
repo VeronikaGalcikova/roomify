@@ -3,77 +3,106 @@
         <div class="profile-container">
             <div>
                 <img src="./user (2).png" alt="Profile Picture" class="profile-picture" />
-                
+
                 <div class="profile-details">
-                <h1>{{ user.first_name }} {{ user.last_name }}</h1>
-                <p style="display: flex; gap: 15px;"><strong>Username:</strong> {{ user.username }}</p>
-                <p style="display: flex; gap: 15px;"><strong>Email:</strong> {{ user.email }}</p>
+                    <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+                    <p style="display: flex; gap: 15px;"><strong>Username:</strong> {{ user.username }}</p>
+                    <p style="display: flex; gap: 15px;"><strong>Email:</strong> {{ user.email }}</p>
                 </div>
             </div>
             <div>
                 <h1>My cards</h1>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Card ID</th>
-                        <th>Expiration</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Card 1</td>
-                        <td>11 January 2025</td>
-                        <td>
-                            <button>Delete</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Card 1</td>
-                        <td>11 January 2025</td>
-                        <td>
-                            <button>Delete</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="cards-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Card ID</th>
+                                <th>Expiration</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let card of cards">
+                                <td>{{ card.card_id }}</td>
+                                <td>{{ card.expiration_date }}</td>
+                                <td class="align-end" style="gap: 20px; display: flex; justify-content: flex-end;">
+                                    <img src="./editing.png" alt="Edit Card" title="Edit User" (click)="showModal(); setSelectedCard(card);"
+                                        style="width: 25px; height: 25px; cursor: pointer;">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
         <div>
             <h1>My entries</h1>
             <table>
                 <thead>
-                <tr>
-                    <th>Card</th>
-                    <th>Room Reader</th>
-                    <th>Type</th>
-                    <th>Time</th>
-                </tr>
+                    <tr>
+                        <th>Card</th>
+                        <th>Room Reader</th>
+                        <th>Type</th>
+                        <th>Time</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <!-- Filter Row -->
-                <tr class="filter-row">
-                    <td><input [(ngModel)]="filter.card_id" type="text" placeholder="Filter by Card ID" (change)="onFilterChange()"></td>
-                    <td><input [(ngModel)]="filter.reader_name" type="text" placeholder="Filter by Reader Name" (change)="onFilterChange()"></td>
-                    <td><input [(ngModel)]="filter.type" type="text" placeholder="Filter by Type" (change)="onFilterChange()"></td>
-                    <td></td> <!-- Empty cell for the Actions column -->
-                </tr>
-                <tr *ngFor="let log of entryLogs">
-                    <td>{{ log.card }}</td>
-                    <td>{{ readerMap[log.readerid!] || "Unknown Reader" }}</td>
-                    <td>{{ log.log_type }}</td>
-                    <td>{{ log.timestamp | date : "short" }}</td>
-                </tr>
+                    <!-- Filter Row -->
+                    <tr class="filter-row">
+                        <td><input [(ngModel)]="filter.card_id" type="text" placeholder="Filter by Card ID"
+                                (change)="onFilterChange()"></td>
+                        <td><input [(ngModel)]="filter.reader_name" type="text" placeholder="Filter by Reader Name"
+                                (change)="onFilterChange()"></td>
+                        <td><input [(ngModel)]="filter.type" type="text" placeholder="Filter by Type"
+                                (change)="onFilterChange()"></td>
+                        <td></td> <!-- Empty cell for the Actions column -->
+                    </tr>
+                    <tr *ngFor="let log of entryLogs">
+                        <td>{{ log.card }}</td>
+                        <td>{{ readerMap[log.readerid!] || "Unknown Reader" }}</td>
+                        <td>{{ log.log_type }}</td>
+                        <td>{{ log.timestamp | date : "short" }}</td>
+                    </tr>
                 </tbody>
             </table>
             <!-- Pagination Controls -->
             <div class="pagination">
                 <button class="pagination-button" (click)="changePage(1)">First</button>
-                <button  class="pagination-button" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Prev</button>
+                <button class="pagination-button" (click)="changePage(currentPage - 1)"
+                    [disabled]="currentPage === 1">Prev</button>
                 <span style="font-size: 13px; color: rgb(110, 110, 110);">Page {{currentPage}}</span>
-                <button  class="pagination-button" (click)="changePage(currentPage + 1)" [disabled]="entryLogs.length !== 25">Next</button>
-                <button  class="pagination-button" (click)="changePage(-1)">Last</button>
+                <button class="pagination-button" (click)="changePage(currentPage + 1)"
+                    [disabled]="entryLogs.length !== 25">Next</button>
+                <button class="pagination-button" (click)="changePage(-1)">Last</button>
             </div>
         </div>
     </div>
 </div>
+
+<app-modal
+  [title]="'Request Room Access'"
+  [isVisible]="isModalVisible"
+  (close)="onModalClose()"
+>
+  <!-- Add/Edit Card Form -->
+  <form (ngSubmit)="requestAccess()">
+    <!-- User ID Dropdown -->
+    <label>Room readers</label>
+    <select
+      name="room reader"
+      required
+    >
+      <option *ngFor="let reader of roomReaders" [value]="reader.uid">
+        {{ reader.name }} (IP: {{ reader.ip }})
+      </option>
+    </select>
+
+    <div style="display: flex; justify-content: space-between;">
+      <button class="cancel-button" type="button" (click)="onModalClose()">Cancel</button>
+      <button type="submit" (click)="onModalClose()" class="submit-button">
+        Send Request
+      </button>
+    </div>
+  </form>
+</app-modal>
