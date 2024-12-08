@@ -116,3 +116,49 @@ class RoomEntryLogViewSet(viewsets.ModelViewSet):
 
     queryset = RoomEntryLog.objects.all()
     serializer_class = RoomEntryLogSerializer
+
+    @action(detail=False, methods=['post'], url_path='filter')
+    def get_filtered_entry_logs(self, request):
+        # Validate pagination parameters
+        pagination = validate_pagination_params(request.data.get('page'), request.data.get('limit'))
+        if isinstance(pagination, Response):
+            # If validation fails, return the Response object
+            return pagination
+
+        # Unpack validated values
+        page = pagination['page']
+        limit = pagination['limit']
+
+        # Build filters based on optional parameters
+        filters = Q()
+        if log_type := request.data.get('log_type'):
+            if log_type not in dict(RoomEntryLog.LOG_TYPES):
+                return Response(
+                    {"detail": "'log_type' must be one of: 'entry', 'exit', 'denied'."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            filters &= Q(log_type=log_type)  # Filter by exact log_type
+
+        if log_id := request.data.get('id'):
+            try:
+                filters &= Q(id=int(log_id))  # Filter by exact ID
+            except ValueError:
+                return Response(
+                    {"detail": "'id' should be an integer."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        if card_id := request.data.get('card_id'):
+            filters &= Q(card__card_id__icontains=card_id)  # Filter by card ID containing the substring
+
+        if card_uid := request.data.get('card_uid'):
+            filters &= Q(card__uid__icontains=card_uid)  # Filter by card UID containing the substring
+
+        if reader_uid := request.data.get('reader_uid'):
+            filters &= Q(reader__uid__icontains=reader_uid)  # Filter by reader UID containing the substring
+
+        if reader_name := request.data.get('reader_name'):
+            filters &= Q(reader__name__icontains=reader_name)  # Filter by reader name containing the substring
+
+        # Apply filters to the queryset, paginate it and return as serialized response
+        return filter_and_paginate_queryset(self, filters, page, limit)
