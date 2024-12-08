@@ -9,14 +9,14 @@ class RoomReaderModelTest(TestCase):
         self.room_reader = RoomReader.objects.create(
             name="Main Entrance",
             ip="192.168.1.1",
-            reader_state=True
+            active=True
         )
 
     def test_create_room_reader(self):
         """Test that a RoomReader instance can be created successfully."""
         self.assertEqual(self.room_reader.name, "Main Entrance")
         self.assertEqual(self.room_reader.ip, "192.168.1.1")
-        self.assertTrue(self.room_reader.reader_state)
+        self.assertTrue(self.room_reader.active)
 
     def test_room_reader_string_representation(self):
         """Test the string representation of a RoomReader."""
@@ -27,10 +27,10 @@ class RoomReaderModelTest(TestCase):
         another_reader = RoomReader.objects.create(name="Side Door", ip="192.168.1.2")
         self.assertNotEqual(self.room_reader.uid, another_reader.uid)
 
-    def test_reader_state_default_value(self):
-        """Test that the default value of reader_state is True."""
+    def test_active_default_value(self):
+        """Test that the default value of active is True."""
         reader = RoomReader.objects.create(name="Side Door", ip="192.168.1.2")
-        self.assertTrue(reader.reader_state)
+        self.assertTrue(reader.active)
 
 
 class UserAgreementModelTest(TestCase):
@@ -40,7 +40,7 @@ class UserAgreementModelTest(TestCase):
         self.room_reader = RoomReader.objects.create(
             name="Main Entrance",
             ip="192.168.1.1",
-            reader_state=True
+            active=True
         )
         self.user_agreement = UserAgreement.objects.create(
             card=self.card,
@@ -94,7 +94,7 @@ class RoomEntryLogModelTest(TestCase):
         self.room_reader = RoomReader.objects.create(
             name="Main Entrance",
             ip="192.168.1.1",
-            reader_state=True
+            active=True
         )
         self.entry_log = RoomEntryLog.objects.create(
             card=self.card,

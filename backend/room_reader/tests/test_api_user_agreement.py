@@ -23,7 +23,7 @@ class UserAgreementAPITests(APITestCase):
         self.superuser = self.User.objects.create_user(username="test_user", password="password", is_superuser=True)
         self.card1 = Card.objects.create(user=self.superuser, card_id="123ABC")
         self.card2 = Card.objects.create(user=self.superuser, card_id="123ABCD")
-        self.room_reader = RoomReader.objects.create(name="Main Entrance", ip="192.168.1.1", reader_state=True)
+        self.room_reader = RoomReader.objects.create(name="Main Entrance", ip="192.168.1.1")
         self.user_agreement = UserAgreement.objects.create(card=self.card1, room_reader=self.room_reader, access=True)
         self.user_agreement_list_url = reverse("useragreement-list")
         self.user_agreement_detail_url = reverse("useragreement-detail", kwargs={"pk": self.user_agreement.id})

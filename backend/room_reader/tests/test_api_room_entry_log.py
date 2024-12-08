@@ -21,7 +21,7 @@ class RoomEntryLogAPITests(APITestCase):
         self.User = get_user_model()
         self.superuser = self.User.objects.create_user(username="testuser", password="password", is_superuser=True)
         self.card = Card.objects.create(user=self.superuser, card_id="123ABC")
-        self.room_reader = RoomReader.objects.create(name="Main Entrance", ip="192.168.1.1", reader_state=True)
+        self.room_reader = RoomReader.objects.create(name="Main Entrance", ip="192.168.1.1")
         self.room_entry_log = RoomEntryLog.objects.create(card=self.card, reader=self.room_reader, log_type="entry")
         self.room_entry_log_list_url = reverse("roomentrylog-list")
         self.room_entry_log_detail_url = reverse("roomentrylog-detail", kwargs={"pk": self.room_entry_log.id})
