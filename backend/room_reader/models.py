@@ -7,7 +7,7 @@ class RoomReader(models.Model):
     uid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=100)
     ip = models.GenericIPAddressField()
-    reader_state = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return f"Room Reader {self.name} ({self.ip})"

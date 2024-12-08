@@ -1,3 +1,4 @@
+from datetime import datetime
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
@@ -9,7 +10,7 @@ class CardAPITests(APITestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.User = None
-        self.user = None
+        self.superuser = None
         self.card = None
         self.card_detail_url = None
         self.card_list_url = None
@@ -17,10 +18,10 @@ class CardAPITests(APITestCase):
     def setUp(self):
         # Create a user
         self.User = get_user_model()
-        self.user = self.User.objects.create_user(username="testuser", password="password")
+        self.superuser = self.User.objects.create_user(username="testuser", password="password", is_superuser=True)
 
         # Create a test card
-        self.card = Card.objects.create(user=self.user, card_id="123ABC", allowed=True)
+        self.card = Card.objects.create(user=self.superuser, card_id="123ABC")
 
         # Store urls for endpoints
         self.card_list_url = reverse("card-list")
@@ -28,21 +29,22 @@ class CardAPITests(APITestCase):
 
     def _authenticate(self):
         """Authenticate user."""
-        self.client.force_authenticate(user=self.user)
+        self.client.force_authenticate(user=self.superuser)
 
     def _create_card(self):
         """Create a new card via POST request."""
-        data = {"user": self.user.id, "card_id": "456DEF", "allowed": False}
+        data = {"user": self.superuser.id, "card_id": "456DEF"}
         return self.client.post(self.card_list_url, data), data
 
     def _full_update_card(self):
         """Fully update a card via PUT request."""
-        data = {"card_id": "UpdatedCard", "allowed": True, "user": self.user.id}
+        data = {"card_id": "UpdatedCard", "expiration_date": "2025-12-05T11:05:25.987730+01:00",
+                "user": self.superuser.id}
         return self.client.put(self.card_detail_url, data), data
 
     def _partial_update_card(self):
         """Partially update a card via PATCH request."""
-        data = {"allowed": False}
+        data = {"expiration_date": "2025-12-10T11:05:25.987730+01:00"}
         return self.client.patch(self.card_detail_url, data), data
 
     def _delete_card(self):
@@ -110,6 +112,10 @@ class CardAPITests(APITestCase):
         for field, expected_value in update_data.items():
             if field == "user":
                 self.assertEqual(self.card.user.id, expected_value)  # Compare user ID
+            elif field == "expiration_date":
+                # Parse the string into a datetime object for comparison
+                expected_datetime = datetime.fromisoformat(expected_value)
+                self.assertEqual(getattr(self.card, field), expected_datetime)
             else:
                 self.assertEqual(getattr(self.card, field), expected_value)
 
@@ -129,6 +135,10 @@ class CardAPITests(APITestCase):
         for field, expected_value in update_data.items():
             if field == "user":
                 self.assertEqual(self.card.user.id, expected_value)  # Compare user ID
+            elif field == "expiration_date":
+                # Parse the string into a datetime object for comparison
+                expected_datetime = datetime.fromisoformat(expected_value)
+                self.assertEqual(getattr(self.card, field), expected_datetime)
             else:
                 self.assertEqual(getattr(self.card, field), expected_value)
 
