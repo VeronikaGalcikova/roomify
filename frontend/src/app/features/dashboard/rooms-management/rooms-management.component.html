@@ -17,6 +17,12 @@
     </tr>
   </thead>
   <tbody>
+    <tr class="filter-row">
+      <td><input [(ngModel)]="filter.name" type="text" placeholder="Filter by Name" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.ip" type="text" placeholder="Filter by IP" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.reader_state" type="text" placeholder="Filter by State" (change)="onFilterChange()"></td>
+      <td></td>
+    </tr>
     <tr *ngFor="let reader of roomReaders">
       <td>{{ reader.name }}</td>
       <td>{{ reader.ip }}</td>
@@ -28,6 +34,15 @@
     </tr>
   </tbody>
 </table>
+
+<!-- Pagination Controls -->
+<div class="pagination">
+  <button class="pagination-button" (click)="changePage(1)">First</button>
+  <button  class="pagination-button" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Prev</button>
+  <span style="font-size: 13px; color: rgb(110, 110, 110);">Page {{currentPage}}</span>
+  <button  class="pagination-button" (click)="changePage(currentPage + 1)" [disabled]="roomReaders.length !== 25">Next</button>
+  <button  class="pagination-button" (click)="changePage(-1)">Last</button>
+</div>
 
 <app-modal
   [title]="isEditing ? 'Edit Card' : 'Add Card'"

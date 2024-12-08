@@ -23,6 +23,13 @@ export class CardManagementComponent implements OnInit {
   isEditing: boolean = false;
   isModalVisible = false;
 
+  filter: IFilter = {
+    id: null,
+    card_id: '',
+    user_id: '',
+  };
+  currentPage: number = 1;
+
   constructor(
     private cardService: CardService,
     private snackBar: MatSnackBar,
@@ -30,7 +37,7 @@ export class CardManagementComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadCards();
+    this.loadCards(1, 25);
     this.loadUsers();
   }
 
@@ -42,7 +49,7 @@ export class CardManagementComponent implements OnInit {
     this.isModalVisible = false;
   }
 
-  loadCards(): void {
+  loadCards(page: number, limit: number): void {
     this.cardService.getAllCards().subscribe({
       next: (cards) => {
         this.cards = cards;
@@ -78,7 +85,7 @@ export class CardManagementComponent implements OnInit {
     };
     this.cardService.createCard(newCard).subscribe({
       next: () => {
-        this.loadCards();
+        this.loadCards(this.currentPage, 25);
         this.cancelEdit();
         this.showSuccessMessage('Card added successfully!');
       },
@@ -104,7 +111,7 @@ export class CardManagementComponent implements OnInit {
           next: () => {
             this.isEditing = false;
             this.selectedCard = null;
-            this.loadCards();
+            this.loadCards(1, 25);
             this.showSuccessMessage('Card updated successfully!');
           },
           error: (error) => {
@@ -119,7 +126,7 @@ export class CardManagementComponent implements OnInit {
   deleteCard(uid: string): void {
     this.cardService.deleteCard(uid).subscribe({
       next: () => {
-        this.loadCards();
+        this.loadCards(this.currentPage, 25);
         this.showSuccessMessage('Card deleted successfully!');
       },
       error: (error) => {
@@ -156,4 +163,21 @@ export class CardManagementComponent implements OnInit {
       panelClass: ['snackbar-error'],
     });
   }
+
+    // Function to change the page
+    changePage(page: number) {
+      this.currentPage = page;
+      this.loadCards(page, 25);
+    }
+  
+    onFilterChange() {
+      this.currentPage = 1;
+      this.loadCards(1, 25);
+    }
+}
+
+export interface IFilter {
+  id?: string | null;
+  card_id?: string;
+  user_id?: string;
 }

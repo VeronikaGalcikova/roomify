@@ -25,7 +25,6 @@ export class UserManagementComponent implements OnInit {
     username: '',
     email: '',
   };
-  // Pagination variables
   currentPage: number = 1;
 
   constructor(
@@ -70,7 +69,7 @@ export class UserManagementComponent implements OnInit {
   addUser(newUser: IUser): void {
     this.userService.createUser(newUser).subscribe({
       next: () => {
-        this.loadUsers(1, 25);
+        this.loadUsers(this.currentPage, 25);
         this.cancelEdit();
         this.showSuccessMessage('User added successfully!');
       },
@@ -96,7 +95,7 @@ export class UserManagementComponent implements OnInit {
           next: () => {
             this.isEditing = false;
             this.selectedUser = null;
-            this.loadUsers(1, 25);
+            this.loadUsers(this.currentPage, 25);
             this.showSuccessMessage('User updated successfully!');
           },
           error: (error) => {
