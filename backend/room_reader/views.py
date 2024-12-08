@@ -148,17 +148,29 @@ class RoomEntryLogViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-        if card_id := request.data.get('card_id'):
-            filters &= Q(card__card_id__icontains=card_id)  # Filter by card ID containing the substring
+        if user_id := request.data.get('user_id'):
+            try:
+                filters &= Q(card__user__id=int(user_id))  # Filter by exact user ID
+            except ValueError:
+                return Response(
+                    {"detail": "'user_id' should be an integer."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
-        if card_uid := request.data.get('card_uid'):
-            filters &= Q(card__uid__icontains=card_uid)  # Filter by card UID containing the substring
+        if user_name := request.data.get('user_name'):
+            filters &= Q(card__user__username__icontains=user_name)  # Filter by username containing the substring
 
         if reader_uid := request.data.get('reader_uid'):
             filters &= Q(reader__uid__icontains=reader_uid)  # Filter by reader UID containing the substring
 
         if reader_name := request.data.get('reader_name'):
             filters &= Q(reader__name__icontains=reader_name)  # Filter by reader name containing the substring
+
+        if card_id := request.data.get('card_id'):
+            filters &= Q(card__card_id__icontains=card_id)  # Filter by card ID containing the substring
+
+        if card_uid := request.data.get('card_uid'):
+            filters &= Q(card__uid__icontains=card_uid)  # Filter by card UID containing the substring
 
         # Apply filters to the queryset, paginate it and return as serialized response
         return filter_and_paginate_queryset(self, filters, page, limit)
