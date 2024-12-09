@@ -3,7 +3,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 90vh;
   width: 100%;
   background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
   margin: 0;
@@ -24,7 +24,6 @@
 form {
   display: flex;
   flex-direction: column;
-  gap: 1em;
 }
 
 /* Adjust the form layout to two columns */
