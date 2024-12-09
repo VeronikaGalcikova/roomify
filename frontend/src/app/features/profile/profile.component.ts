@@ -203,6 +203,7 @@ export class ProfileComponent {
           page,
           limit,
           user_id: this.user.id,
+          ...this.filter
         })
         .subscribe({
           next: (logs) => {
