@@ -168,6 +168,7 @@ class UserAgreementViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
         except UserAgreement.DoesNotExist:
+            RoomEntryLog.objects.create(card_id=card_id, reader_id=room_reader_id, log_type='denied')
             return Response(
                 {"access": False},
                 status=status.HTTP_200_OK
