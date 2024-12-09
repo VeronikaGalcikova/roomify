@@ -5,6 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '../../shared/modal/modal.component';
 import { IAccessPermission } from '../../../shared/access-permission/access-permission.interface';
 import { AccessPermissionService } from '../../../services/access-permission/access-permission.service';
+import { ICard } from '../../../shared/card/find-cards-by-user.interface';
+import { IRoomReader } from '../../../shared/room-reader/get-all-room-readers.interface';
+import { CardService } from '../../../services/card/card.service';
+import { RoomReaderService } from '../../../services/room-reader/room-reader.service';
 
 @Component({
   selector: 'app-access-management',
@@ -15,6 +19,8 @@ import { AccessPermissionService } from '../../../services/access-permission/acc
 })
 export class AccessManagementComponent implements OnInit {
   perms: IAccessPermission[] = [];
+  cards: ICard[] = [];
+  readers: IRoomReader[] = [];
   selectedPerm: IAccessPermission | null = null;
   errorMessage: string = '';
   isEditing: boolean = false;
@@ -33,11 +39,15 @@ export class AccessManagementComponent implements OnInit {
 
   constructor(
     private permService: AccessPermissionService,
+    private cardService: CardService,
+    private roomReaderService: RoomReaderService,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.loadPerms(1, 25);
+    this.loadCards();
+    this.loadRoomReaders();
   }
 
   showModal() {
@@ -46,6 +56,31 @@ export class AccessManagementComponent implements OnInit {
 
   onModalClose() {
     this.isModalVisible = false;
+  }
+
+  loadCards(): void {
+    this.cardService.getAllCards().subscribe({
+      next: (cards) => {
+        this.cards = cards;
+      },
+      error: (error) => {
+        console.error('Error fetching cards:', error);
+        this.errorMessage = 'Failed to load cards.';
+        this.showErrorMessage('Failed to load cards.');
+      },
+    });
+  }
+
+  loadRoomReaders(): void {
+    this.roomReaderService.getAllRoomReaders().subscribe({
+      next: (readers: IRoomReader[]) => {
+        this.readers = readers;
+      },
+      error: (error: any) => {
+        console.error('Error fetching room readers:', error);
+        this.errorMessage = 'Failed to load room readers.';
+      },
+    });
   }
 
   loadPerms(page: number, limit: number): void {

@@ -12,8 +12,8 @@
       <th>Status</th>
       <th>Card</th>
       <th>Card ID</th>
-      <th>Room Reader</th>
-      <th>Room Reader Name</th>
+      <th>Reader</th>
+      <th>Reader Name</th>
       <th>User ID</th>
       <th>User Name</th>
       <th style="display: flex; justify-content: flex-end;">Actions</th>
@@ -69,6 +69,20 @@
         </option>
         <option [value]="'pending'">
           Pending
+        </option>
+      </select>
+
+      <label>Card</label>
+      <select [(ngModel)]="selectedPerm!.card_id" name="status" [disabled]="isEditing" required>
+        <option *ngFor="let card of cards" [value]="card.card_id">
+          {{ card.card_id }}
+        </option>
+      </select>
+
+      <label>Room Reader</label>
+      <select [(ngModel)]="selectedPerm!.room_reader" name="status" [disabled]="isEditing" required>
+        <option *ngFor="let reader of readers" [value]="reader.uid">
+          {{ reader.name }}
         </option>
       </select>
 

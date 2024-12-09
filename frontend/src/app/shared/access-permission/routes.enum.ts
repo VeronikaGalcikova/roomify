@@ -1,6 +1,6 @@
 export enum AccessPermissionRoutes {
-    FIND_ACCESS_PERMISSIONS_BY_FILTER = 'api/access-permissions/filter/',
-    CREATE_ACCESS_PERMISSION = 'api/access-permissions/',
-    UPDATE_ACCESS_PERMISSION = 'api/access-permissions/',
-    DELETE_ACCESS_PERMISSION = 'api/access-permissions/',
+    FIND_ACCESS_PERMISSIONS_BY_FILTER = 'api/user-agreements/filter/',
+    CREATE_ACCESS_PERMISSION = 'api/user-agreements/',
+    UPDATE_ACCESS_PERMISSION = 'api/user-agreements/',
+    DELETE_ACCESS_PERMISSION = 'api/user-agreements/',
 }
