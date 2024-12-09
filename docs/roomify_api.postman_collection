@@ -1079,7 +1079,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "    {\n        \"expiration_date\": \"2025-12-08T11:05:25.987730+01:00\"\n    }",
+							"raw": "    {\n        \"expiration_date\": \"2024-12-05T11:05:25.987730+01:00\"\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1173,6 +1173,51 @@
 							"path": [
 								"api",
 								"user-agreements",
+								""
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Get filtered agreements",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"page\": 1,\n    \"limit\": 25,\n    \"id\": 2,  // optional\n    \"status\": \"pending\",  // optional\n    \"card\": \"947a0e4b-1816-498f-a58b-732387c09a6d\",  // optional\n    \"room_reader\": \"289d8729-1d4b-4e4f-9a49-17b2ac1a4063\",  // optional\n    \"card_id\": \"1234-5678-ABCDjzso\",  // optional\n    \"user_id\": 2,  // optional\n    \"user_name\": \"admin\",  // optional\n    \"room_reader_name\": \"Entrance\"  // optional\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user-agreements/filter/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user-agreements",
+								"filter",
 								""
 							]
 						},
@@ -1486,7 +1531,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNzU4ODUxLCJpYXQiOjE3MzM3NTUyNTEsImp0aSI6ImI2YTEzMTBiNTE1ODQwZjFiMGJhNmIzNGZkODU3ODE5IiwidXNlcl9pZCI6MiwiaXNfc3VwZXJ1c2VyIjp0cnVlfQ.nB4eVgCF55C43lLM0MA3VIXew2gYxrxmlSeCqCS4bfI",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNzYyODI1LCJpYXQiOjE3MzM3NTkyMjUsImp0aSI6IjVmMWI3MWIyZTNmNzQ3MmU4YzA5MzgzYmZlNmQ4Y2QyIiwidXNlcl9pZCI6MiwiaXNfc3VwZXJ1c2VyIjp0cnVlfQ.HQgM9ub0N34HSsv_Wgy0Q61TQCR9YATSPZr2mi4EPvE",
 				"type": "string"
 			}
 		]
