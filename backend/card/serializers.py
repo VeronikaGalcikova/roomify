@@ -12,6 +12,10 @@ class CardSerializer(serializers.ModelSerializer):
         # Get the default representation of the instance
         representation = super().to_representation(instance)
 
+        # Add the user's username to the representation if available
+        if instance.user:
+            representation['user_name'] = instance.user.username
+
         # Convert the 'expiration_date' field to local time if it exists
         if 'expiration_date' in representation and instance.expiration_date:
             representation['expiration_date'] = localtime(instance.expiration_date).isoformat()
