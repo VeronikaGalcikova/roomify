@@ -45,14 +45,14 @@ class UserAgreementModelTest(TestCase):
         self.user_agreement = UserAgreement.objects.create(
             card=self.card,
             room_reader=self.room_reader,
-            access=True
+            status="allowed"
         )
 
     def test_create_user_agreement(self):
         """Test that a UserAgreement instance can be created successfully."""
         self.assertEqual(self.user_agreement.card, self.card)
         self.assertEqual(self.user_agreement.room_reader, self.room_reader)
-        self.assertTrue(self.user_agreement.access)
+        self.assertEqual(self.user_agreement.status, "allowed")
 
     def test_user_agreement_string_representation(self):
         """Test the string representation of a UserAgreement."""
@@ -67,14 +67,8 @@ class UserAgreementModelTest(TestCase):
             UserAgreement.objects.create(
                 card=self.card,
                 room_reader=self.room_reader,
-                access=False
+                status="not_allowed"
             )
-
-    def test_access_default_value(self):
-        """Test that the default value of access is False."""
-        card = Card.objects.create(user=self.user, card_id="123ABCD")
-        user_agreement = UserAgreement.objects.create(card=card, room_reader=self.room_reader)
-        self.assertFalse(user_agreement.access)
 
     def test_foreign_key_relationship_card(self):
         """Test the foreign key relationship between UserAgreement and Card."""

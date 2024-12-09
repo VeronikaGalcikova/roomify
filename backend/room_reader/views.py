@@ -95,7 +95,7 @@ class UserAgreementViewSet(viewsets.ModelViewSet):
             )
 
         try:
-            # Check if the card  and room reader exist
+            # Check if the card and room reader exist
             card = Card.objects.get(uid=card_id)
             room_reader = RoomReader.objects.get(uid=room_reader_id)
 
@@ -126,9 +126,14 @@ class UserAgreementViewSet(viewsets.ModelViewSet):
             # Fetch the user agreement for the card and room reader
             agreement = UserAgreement.objects.get(card_id=card_id, room_reader_id=room_reader_id)
 
-            if not agreement.access:
+            if agreement.status == 'not_allowed':
                 log_type = 'denied'
+                response = {"access": False}
+            elif agreement.status == 'pending':
+                log_type = 'denied'
+                response = {"access": False, "detail": f"Entry permission for this card was not accepted yet."}
             else:
+                response = {"access": True}
                 # Fetch the latest log for the card and room reader
                 latest_log = RoomEntryLog.objects.filter(card_id=card_id, reader_id=room_reader_id).order_by(
                     '-timestamp').first()
@@ -142,11 +147,8 @@ class UserAgreementViewSet(viewsets.ModelViewSet):
 
             # Create the log with the determined log_type
             RoomEntryLog.objects.create(card_id=card_id, reader_id=room_reader_id, log_type=log_type)
+            return Response(response, status=status.HTTP_200_OK)
 
-            return Response(
-                {"access": agreement.access},
-                status=status.HTTP_200_OK
-            )
         except Card.DoesNotExist:
             return Response(
                 {"access": False, "detail": "Card does not exist."},

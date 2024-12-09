@@ -44,7 +44,8 @@ class UserAPITests(APITestCase):
             'password': 'newpassword123',
             'email': 'newuser@example.com',
             'first_name': 'New',
-            'last_name': 'User'
+            'last_name': 'User',
+            'is_superuser': False
         }
         return self.client.post(self.users_list_url, data), data
 
