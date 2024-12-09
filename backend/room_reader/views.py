@@ -5,7 +5,7 @@ from room_reader.serializers import RoomEntryLogSerializer, RoomReaderSerializer
 from card.models import Card
 from rest_framework import viewsets, status
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from core.permissions import IsSuperUserOrReadOnly, IsSuperUserOnly
+from core.permissions import IsSuperUserOrReadOnly, IsSuperUserOnly, IsAuthenticatedUser
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db.models import Q
@@ -14,10 +14,14 @@ from django.utils.timezone import now, make_aware
 
 class RoomReaderViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsSuperUserOrReadOnly]
 
     queryset = RoomReader.objects.all()
     serializer_class = RoomReaderSerializer
+
+    def get_permissions(self):
+        if self.action == 'get_filtered_room_readers':
+            return [IsAuthenticatedUser()]
+        return [IsSuperUserOrReadOnly()]
 
     @action(detail=False, methods=['post'], url_path='filter')
     def get_filtered_room_readers(self, request):
@@ -64,10 +68,14 @@ class RoomReaderViewSet(viewsets.ModelViewSet):
 
 class UserAgreementViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsSuperUserOnly]
 
     queryset = UserAgreement.objects.all()
     serializer_class = UserAgreementSerializer
+
+    def get_permissions(self):
+        if self.action in ['get_filtered_user_agreements', 'create']:
+            return [IsAuthenticatedUser()]
+        return [IsSuperUserOnly()]
 
     @action(detail=False, methods=['post'], url_path='verify')
     def verify(self, request):
@@ -219,6 +227,11 @@ class RoomEntryLogViewSet(viewsets.ModelViewSet):
 
     queryset = RoomEntryLog.objects.all()
     serializer_class = RoomEntryLogSerializer
+
+    def get_permissions(self):
+        if self.action == 'get_filtered_entry_logs':
+            return [IsAuthenticatedUser()]
+        return [IsSuperUserOnly()]
 
     @action(detail=False, methods=['post'], url_path='filter')
     def get_filtered_entry_logs(self, request):
