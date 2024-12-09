@@ -6,7 +6,7 @@ api_blueprint = Blueprint('api', __name__)
 
 
 CORS(api_blueprint, resources={
-    r"/api/*": {"origins": ["http://localhost:4200", "http://localhost:80"]}
+    r"/api/*": {"origins": ["http://localhost:4200", "http://localhost:80", "http://localhost"]}
 })
 
 
