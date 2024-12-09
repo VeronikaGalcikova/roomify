@@ -92,11 +92,24 @@ class UserAgreementViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Query the database
         try:
             agreement = UserAgreement.objects.get(card_id=card_id, room_reader_id=room_reader_id)
 
-            log_type = 'denied' if not agreement.access else 'entry'
+            if not agreement.access:
+                log_type = 'denied'
+            else:
+                # Fetch the latest log for the card and room reader
+                latest_log = RoomEntryLog.objects.filter(card_id=card_id, reader_id=room_reader_id).order_by(
+                    '-timestamp').first()
+
+                if not latest_log or latest_log.log_type == 'exit':
+                    log_type = 'entry'
+                elif latest_log.log_type == 'entry':
+                    log_type = 'exit'
+                else:
+                    log_type = 'entry'  # Default to 'entry' if an unexpected case arises
+
+            # Create the log with the determined log_type
             RoomEntryLog.objects.create(card_id=card_id, reader_id=room_reader_id, log_type=log_type)
 
             return Response(
