@@ -8,7 +8,7 @@ class UserSerializerTestCase(TestCase):
     def test_user_serializer_fields(self):
         """Test the fields in the UserSerializer."""
         serializer = UserSerializer()
-        expected_fields = ['username', 'password', 'email', 'first_name', 'last_name', 'id']
+        expected_fields = ['username', 'password', 'email', 'first_name', 'last_name', 'id', 'is_superuser']
         self.assertEqual(set(serializer.fields.keys()), set(expected_fields))
 
     def test_user_serializer_valid_data(self):
@@ -18,7 +18,8 @@ class UserSerializerTestCase(TestCase):
             'password': 'password123',
             'email': 'testuser@example.com',
             'first_name': 'John',
-            'last_name': 'Doe'
+            'last_name': 'Doe',
+            'is_superuser': False
         }
 
         serializer = UserSerializer(data=data)

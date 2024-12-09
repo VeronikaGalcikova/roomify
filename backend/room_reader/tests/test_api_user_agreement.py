@@ -24,7 +24,8 @@ class UserAgreementAPITests(APITestCase):
         self.card1 = Card.objects.create(user=self.superuser, card_id="123ABC")
         self.card2 = Card.objects.create(user=self.superuser, card_id="123ABCD")
         self.room_reader = RoomReader.objects.create(name="Main Entrance", ip="192.168.1.1")
-        self.user_agreement = UserAgreement.objects.create(card=self.card1, room_reader=self.room_reader, access=True)
+        self.user_agreement = UserAgreement.objects.create(card=self.card1, room_reader=self.room_reader,
+                                                           status="allowed")
         self.user_agreement_list_url = reverse("useragreement-list")
         self.user_agreement_detail_url = reverse("useragreement-detail", kwargs={"pk": self.user_agreement.id})
 
@@ -34,17 +35,17 @@ class UserAgreementAPITests(APITestCase):
 
     def _create_user_agreement(self):
         """Create a new user agreement via POST request."""
-        data = {"card": self.card2.uid, "room_reader": self.room_reader.uid, "access": False}
+        data = {"card": self.card2.uid, "room_reader": self.room_reader.uid, "status": "not_allowed"}
         return self.client.post(self.user_agreement_list_url, data), data
 
     def _full_update_user_agreement(self):
         """Fully update a user agreement via PUT request."""
-        data = {"card": self.card1.uid, "room_reader": self.room_reader.uid, "access": False}
+        data = {"card": self.card1.uid, "room_reader": self.room_reader.uid, "status": "not_allowed"}
         return self.client.put(self.user_agreement_detail_url, data), data
 
     def _partial_update_user_agreement(self):
         """Partially update a user agreement via PATCH request."""
-        data = {"access": False}
+        data = {"status": "not_allowed"}
         return self.client.patch(self.user_agreement_detail_url, data), data
 
     def _delete_user_agreement(self):

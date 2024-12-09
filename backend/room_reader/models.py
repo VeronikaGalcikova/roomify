@@ -14,9 +14,15 @@ class RoomReader(models.Model):
     
     
 class UserAgreement(models.Model):
+    STATUS_TYPES = (
+        ('allowed', 'Allowed'),
+        ('not_allowed', 'Not Allowed'),
+        ('pending', 'Pending'),
+    )
+
     card = models.ForeignKey(Card, on_delete=models.CASCADE, related_name="agreements")
     room_reader = models.ForeignKey(RoomReader, on_delete=models.CASCADE, related_name="agreements")
-    access = models.BooleanField(default=False)
+    status = models.CharField(max_length=15, choices=STATUS_TYPES)
 
     class Meta:
         unique_together = ('card', 'room_reader')
