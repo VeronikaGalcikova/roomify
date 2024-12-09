@@ -34,3 +34,17 @@ class RoomEntryLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomEntryLog
         fields = '__all__'
+
+    def to_representation(self, instance):
+        # Get the default representation of the instance
+        representation = super().to_representation(instance)
+
+        # Add the card to the representation if available
+        if instance.card:
+            representation['card_id'] = instance.card.card_id
+
+        # Add the room reader's name to the representation if available
+        if instance.reader:
+            representation['reader_name'] = instance.reader.name
+
+        return representation
