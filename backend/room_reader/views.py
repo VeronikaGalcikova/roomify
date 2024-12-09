@@ -42,8 +42,8 @@ class RoomReaderViewSet(viewsets.ModelViewSet):
         if ip := request.data.get('ip'):
             filters &= Q(ip__icontains=ip)  # Filter by IP containing the substring
 
-        if active := request.data.get('active'):
-            # Ensure the `active` value is a boolean
+        if 'active' in request.data:
+            active = request.data['active']
             if isinstance(active, bool):
                 filters &= Q(active=active)
             else:
