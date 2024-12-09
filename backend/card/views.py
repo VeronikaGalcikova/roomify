@@ -5,16 +5,20 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.db.models import Q
-from core.permissions import IsSuperUserOrReadOnly
-from core.utils import validate_pagination_params, paginate_queryset, filter_and_paginate_queryset
+from core.permissions import IsSuperUserOrReadOnly, IsAuthenticatedUser
+from core.utils import validate_pagination_params, filter_and_paginate_queryset
 
 
 class CardViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsSuperUserOrReadOnly]
 
     queryset = Card.objects.all()
     serializer_class = CardSerializer
+
+    def get_permissions(self):
+        if self.action in ['by_user', 'get_filtered_cards']:
+            return [IsAuthenticatedUser()]
+        return [IsSuperUserOrReadOnly()]
     
     @action(detail=False, methods=["post"], url_path="by-user")
     def by_user(self, request):

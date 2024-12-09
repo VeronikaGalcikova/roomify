@@ -8,16 +8,20 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.views import TokenObtainPairView
-from core.permissions import IsSuperUserOnly
-from core.utils import validate_pagination_params, paginate_queryset, filter_and_paginate_queryset
+from core.permissions import IsSuperUserOnly, IsAuthenticatedUser
+from core.utils import validate_pagination_params, filter_and_paginate_queryset
 
 
 class UserViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsSuperUserOnly]
     
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def get_permissions(self):
+        if self.action == 'get_filtered_users':
+            return [IsAuthenticatedUser()]
+        return [IsSuperUserOnly()]
 
     @action(detail=False, methods=['post'], url_path='filter')
     def get_filtered_users(self, request):

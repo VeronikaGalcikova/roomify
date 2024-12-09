@@ -20,3 +20,11 @@ class IsSuperUserOrReadOnly(BasePermission):
 
         # Allow other methods only for superusers
         return request.user and request.user.is_superuser
+
+
+class IsAuthenticatedUser(BasePermission):
+    """Allow all methods for all authenticated users."""
+    message = "You must be authenticated to perform this action."
+
+    def has_permission(self, request, view):
+        return request.user and request.user.is_authenticated
