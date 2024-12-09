@@ -8,6 +8,7 @@ import { CardManagementComponent } from './card-management/card-management.compo
 import { RoomsManagementComponent } from './rooms-management/rooms-management.component';
 import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
+import { AccessManagementComponent } from './access-management/access-management.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +21,7 @@ import { Router } from '@angular/router';
     CardManagementComponent,
     RoomsManagementComponent,
     LastAccessesComponent,
+    AccessManagementComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
@@ -31,7 +33,7 @@ export class DashboardComponent implements OnInit {
     | 'cards-management'
     | 'rooms-management'
     | 'last-accesses'
-    | 'admin-panel' = 'users-management';
+    | 'access-management' = 'users-management';
 
   constructor(
     private authService: AuthService,
@@ -51,7 +53,7 @@ export class DashboardComponent implements OnInit {
       | 'cards-management'
       | 'rooms-management'
       | 'last-accesses'
-      | 'admin-panel'
+      | 'access-management'
   ): void {
     this.selectedView = view;
   }

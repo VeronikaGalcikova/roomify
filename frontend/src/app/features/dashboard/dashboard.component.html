@@ -4,29 +4,20 @@
     <h2>Dashboard</h2>
     <nav>
       <ul>
-        <li
-          [class.active]="selectedView === 'users-management'"
-          (click)="selectView('users-management')"
-        >
+        <li [class.active]="selectedView === 'users-management'" (click)="selectView('users-management')">
           User Management
         </li>
-        <li
-          [class.active]="selectedView === 'cards-management'"
-          (click)="selectView('cards-management')"
-        >
+        <li [class.active]="selectedView === 'cards-management'" (click)="selectView('cards-management')">
           Card Management
         </li>
-        <li
-          [class.active]="selectedView === 'rooms-management'"
-          (click)="selectView('rooms-management')"
-        >
+        <li [class.active]="selectedView === 'rooms-management'" (click)="selectView('rooms-management')">
           Rooms Management
         </li>
-        <li
-          [class.active]="selectedView === 'last-accesses'"
-          (click)="selectView('last-accesses')"
-        >
+        <li [class.active]="selectedView === 'last-accesses'" (click)="selectView('last-accesses')">
           Last Accesses
+        </li>
+        <li [class.active]="selectedView === 'access-management'" (click)="selectView('access-management')">
+          Access Management
         </li>
       </ul>
     </nav>
@@ -35,23 +26,18 @@
   <!-- Main Content -->
   <main class="main-content">
     <!-- User Management Section -->
-    <app-user-management
-      *ngIf="selectedView === 'users-management'"
-    ></app-user-management>
+    <app-user-management *ngIf="selectedView === 'users-management'"></app-user-management>
 
     <!-- Card Management Section -->
-    <app-card-management
-      *ngIf="selectedView === 'cards-management'"
-    ></app-card-management>
+    <app-card-management *ngIf="selectedView === 'cards-management'"></app-card-management>
 
     <!-- Rooms Management Section -->
-    <app-rooms-management
-      *ngIf="selectedView === 'rooms-management'"
-    ></app-rooms-management>
+    <app-rooms-management *ngIf="selectedView === 'rooms-management'"></app-rooms-management>
 
     <!-- Last Accesses Section -->
-    <app-last-accesses
-      *ngIf="selectedView === 'last-accesses'"
-    ></app-last-accesses>
+    <app-last-accesses *ngIf="selectedView === 'last-accesses'"></app-last-accesses>
+
+    <!-- Last Accesses Section -->
+    <app-access-management *ngIf="selectedView === 'access-management'"></app-access-management>
   </main>
 </div>

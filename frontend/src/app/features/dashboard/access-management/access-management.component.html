@@ -1,0 +1,83 @@
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 0 20px">
+  <div>
+    <h1>Access Permissions Management</h1>
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  </div>
+  <img src="./add.png" alt="Add New Access Permissions" (click)="initiateAddPerm(); showModal();"
+    title="Add New Access Permission" style="width: 30px; height: 30px; cursor: pointer;">
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Card</th>
+      <th>Card ID</th>
+      <th>Room Reader</th>
+      <th>Room Reader Name</th>
+      <th>User ID</th>
+      <th>User Name</th>
+      <th style="display: flex; justify-content: flex-end;">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="filter-row">
+      <td><input [(ngModel)]="filter.status" type="text" placeholder="Filter by Status" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.card" type="text" placeholder="Filter by Card" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.card_id" type="text" placeholder="Filter by Card ID" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.room_reader" type="text" placeholder="Filter by Reader ID" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.room_reader_name" type="text" placeholder="Filter by Reader" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.user_id" type="text" placeholder="Filter by User Id" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.user_name" type="text" placeholder="Filter by User" (change)="onFilterChange()"></td>
+      <td></td>
+    </tr>
+    <tr *ngFor="let perm of perms">
+      <td>{{ perm.status }}</td>
+      <td>{{ perm.card }}</td>
+      <td>{{ perm.card_id }}</td>
+      <td>{{ perm.room_reader }}</td>
+      <td>{{ perm.room_reader_name }}</td>
+      <td>{{ perm.user_id }}</td>
+      <td>{{ perm.user_name }}</td>
+      <td class="align-end" style="gap: 20px; display: flex; justify-content: flex-end;">
+        <img src="./editing.png" alt="Edit Card" (click)="editPerm(perm); showModal();" title="Edit Card"
+          style="width: 25px; height: 25px; cursor: pointer;">
+        <img src="./bin.png" alt="Delete Access Permission" (click)="deletePerm(perm.id);" title="Delete Access Permission"
+          style="width: 25px; height: 25px; cursor: pointer;">
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="pagination">
+  <button class="pagination-button" (click)="changePage(1)">First</button>
+  <button class="pagination-button" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Prev</button>
+  <span style="font-size: 13px; color: rgb(110, 110, 110);">Page {{currentPage}}</span>
+  <button class="pagination-button" (click)="changePage(currentPage + 1)" [disabled]="perms.length !== 25">Next</button>
+  <button class="pagination-button" (click)="changePage(-1)">Last</button>
+</div>
+
+<app-modal [title]="isEditing ? 'Edit Access Permission' : 'Add Access Permission'" [isVisible]="isModalVisible" (close)="onModalClose()">
+  <div *ngIf="isEditing || selectedPerm">
+    <form (ngSubmit)="isEditing ? updatePerm() : addPerm(selectedPerm!)">
+      <label>Status</label>
+      <select [(ngModel)]="selectedPerm!.status" name="status" [disabled]="isEditing" required>
+        <option [value]="'allowed'">
+          Allowed
+        </option>
+        <option [value]="'not_allowed'">
+          Denied
+        </option>
+        <option [value]="'pending'">
+          Pending
+        </option>
+      </select>
+
+      <div style="display: flex; justify-content: space-between;">
+        <button class="cancel-button" type="button" (click)="cancelEdit(); onModalClose()">Cancel</button>
+        <button type="submit" (click)="onModalClose()" class="submit-button">
+          {{ isEditing ? 'Update Access Permission' : 'Add Access Permission' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</app-modal>
