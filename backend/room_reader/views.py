@@ -2,12 +2,14 @@ from core.utils import validate_pagination_params, filter_and_paginate_queryset
 from core.validators import is_valid_uuid
 from room_reader.models import RoomEntryLog, RoomReader, UserAgreement
 from room_reader.serializers import RoomEntryLogSerializer, RoomReaderSerializer, UserAgreementSerializer
+from card.models import Card
 from rest_framework import viewsets, status
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from core.permissions import IsSuperUserOrReadOnly, IsSuperUserOnly
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db.models import Q
+from django.utils.timezone import now, make_aware
 
 
 class RoomReaderViewSet(viewsets.ModelViewSet):
@@ -93,6 +95,35 @@ class UserAgreementViewSet(viewsets.ModelViewSet):
             )
 
         try:
+            # Check if the card  and room reader exist
+            card = Card.objects.get(uid=card_id)
+            room_reader = RoomReader.objects.get(uid=room_reader_id)
+
+            # Check if the room reader is active
+            if not room_reader.active:
+                RoomEntryLog.objects.create(
+                    card_id=card_id,
+                    reader_id=room_reader_id,
+                    log_type='denied'
+                )
+                return Response(
+                    {"access": False, "detail": "The room reader is not active."},
+                    status=status.HTTP_200_OK
+                )
+
+            # Check if the card is not expired
+            if card.expiration_date < now():
+                RoomEntryLog.objects.create(
+                    card_id=card_id,
+                    reader_id=room_reader_id,
+                    log_type='denied'
+                )
+                return Response(
+                    {"access": False, "detail": "The card is expired."},
+                    status=status.HTTP_200_OK
+                )
+
+            # Fetch the user agreement for the card and room reader
             agreement = UserAgreement.objects.get(card_id=card_id, room_reader_id=room_reader_id)
 
             if not agreement.access:
@@ -116,10 +147,20 @@ class UserAgreementViewSet(viewsets.ModelViewSet):
                 {"access": agreement.access},
                 status=status.HTTP_200_OK
             )
+        except Card.DoesNotExist:
+            return Response(
+                {"access": False, "detail": "Card does not exist."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except RoomReader.DoesNotExist:
+            return Response(
+                {"access": False, "detail": "RoomReader does not exist."},
+                status=status.HTTP_404_NOT_FOUND
+            )
         except UserAgreement.DoesNotExist:
             return Response(
-                {"detail": "User agreement does not exist."},
-                status=status.HTTP_404_NOT_FOUND
+                {"access": False},
+                status=status.HTTP_200_OK
             )
 
 
