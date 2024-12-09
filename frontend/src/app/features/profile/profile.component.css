@@ -6,6 +6,11 @@
     background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
 }
 
+.disabledEdit {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 h1 {
     font-size: 24px;
     color: #333;

@@ -62,7 +62,7 @@ export class AccessPermissionService {
   deleteAccessPermission(
     deleteAccessPermissionDto: IDeleteAccessPermissionDto
   ): Observable<IDeleteAccessPermissionResponse> {
-    const deleteAccessPermissionUrl = `${this.apiUrl}${AccessPermissionRoutes.DELETE_ACCESS_PERMISSION}/${deleteAccessPermissionDto.id}`;
+    const deleteAccessPermissionUrl = `${this.apiUrl}${AccessPermissionRoutes.DELETE_ACCESS_PERMISSION}${deleteAccessPermissionDto.id}`;
     return this.http.delete<IDeleteAccessPermissionResponse>(
       deleteAccessPermissionUrl
     );

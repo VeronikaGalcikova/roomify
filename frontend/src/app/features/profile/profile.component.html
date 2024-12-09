@@ -26,8 +26,8 @@
                                 <td>{{ card.card_id }}</td>
                                 <td>{{ card.expiration_date }}</td>
                                 <td class="align-end" style="gap: 20px; display: flex; justify-content: flex-end;">
-                                    <img src="./editing.png" alt="Edit Card" title="Edit User" (click)="showModal(); setSelectedCard(card);"
-                                        style="width: 25px; height: 25px; cursor: pointer;">
+                                    <img src="./editing.png" alt="Edit Card" title="Request Permission" (click)="showModal(); setSelectedCard(card);"
+                                        [ngClass]="{'disabledEdit': card.readers?.length === 0}" style="width: 25px; height: 25px;">
                                 </td>
                             </tr>
                         </tbody>
@@ -86,14 +86,16 @@
   (close)="onModalClose()"
 >
   <!-- Add/Edit Card Form -->
-  <form (ngSubmit)="requestAccess()">
+  <form (ngSubmit)="createPemr()">
     <!-- User ID Dropdown -->
     <label>Room readers</label>
     <select
       name="room reader"
+      [(ngModel)]="selectedReader"
+      [disabled]="selectedCard?.readers?.length === 0"
       required
     >
-      <option *ngFor="let reader of roomReaders" [value]="reader.uid">
+      <option *ngFor="let reader of selectedCard?.readers" [value]="reader.uid">
         {{ reader.name }} (IP: {{ reader.ip }})
       </option>
     </select>

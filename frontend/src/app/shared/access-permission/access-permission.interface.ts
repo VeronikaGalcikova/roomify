@@ -1,6 +1,6 @@
 export interface IAccessPermission {
     id: number;
-    status: string;
+    status: 'allowed' | 'not_allowed' | 'pending';
     card: string;
     card_id: string;
     room_reader: string;

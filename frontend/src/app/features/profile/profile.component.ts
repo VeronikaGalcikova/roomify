@@ -12,6 +12,9 @@ import { IRoomReader } from '../../shared/room-reader/get-all-room-readers.inter
 import { ICard } from '../../shared/card/find-cards-by-user.interface';
 import { IRoomEntryLog } from '../../shared/entry-log/entry-log.interface';
 import { ModalComponent } from '../shared/modal/modal.component';
+import { AccessPermissionService } from '../../services/access-permission/access-permission.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { IAccessPermission } from '../../shared/access-permission/access-permission.interface';
 
 @Component({
   selector: 'app-profile',
@@ -42,34 +45,44 @@ export class ProfileComponent {
     type: '',
   };
   currentPage: number = 1;
-  cards: ICard[] = [];
+  cards: (ICard & { readers: IRoomReader[] })[] = [];
   cardMap: { [key: string]: number } = {}; // card.uid to user.id
   roomReaders: IRoomReader[] = [];
   readerMap: { [key: string]: string } = {}; // reader.uid to reader.name
-  selectedCard: ICard | null = null;
+  selectedCard: (ICard & { readers: IRoomReader[] }) | null = null;
+  selectedReader: string = '';
+
+  perms: IAccessPermission[] = [];
 
   constructor(
     private authService: AuthService,
     private userService: UserService,
     private roomEntryLogService: RoomEntryLogService,
     private cardService: CardService,
-    private roomReaderService: RoomReaderService
+    private roomReaderService: RoomReaderService,
+    private permService: AccessPermissionService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
+    this.fetchData();
+  }
+
+  fetchData() {
     this.authService.userIdSubject$.subscribe((userId) => {
       this.userService
         .findUsersByFilter({ id: userId ?? -1, page: 1, limit: 1 })
         .subscribe({
           next: (response: IFindUsersByFilterResponse) => {
             this.user = response[0];
-            console.log('User:', this.user);
-            this.fetchCards()
-              .then(() => this.fetchRoomReaders())
-              .then(() => this.fetchEntryLogs(1, 25))
-              .catch((error) => {
-                console.error('Initialization error:', error);
-              });
+            this.loadPerms().then(() =>
+              this.fetchRoomReaders()
+                .then(() => this.fetchCards())
+                .then(() => this.fetchEntryLogs(1, 25))
+                .catch((error) => {
+                  console.error('Initialization error:', error);
+                })
+            );
           },
           error: (error) => {
             console.error('Fetch user cards failed!', error);
@@ -78,9 +91,51 @@ export class ProfileComponent {
     });
   }
 
-  setSelectedCard(card: ICard) {
+  loadPerms(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.permService
+        .findAccessPermissionsByFilter({
+          limit: 100,
+          page: 1,
+          user_id: this.user.id.toString(),
+        })
+        .subscribe({
+          next: (perms) => {
+            this.perms = perms;
+            resolve();
+          },
+          error: (error) => {
+            console.error('Error fetching cards:', error);
+            reject(error);
+          },
+        });
+    });
+  }
+
+  setSelectedCard(card: ICard & { readers: IRoomReader[] }) {
     console.log('Selected Card:', card);
     this.selectedCard = card;
+  }
+
+  createPemr() {
+    this.permService
+      .createAccessPermission({
+        card: this.selectedCard?.uid ?? '',
+        room_reader: this.selectedReader,
+        status: 'pending',
+      })
+      .subscribe({
+        next: (perm) => {
+          console.log('Created Permission:', perm);
+          this.showSuccessMessage('Permission request sent successfully.');
+          this.fetchData();
+        },
+        error: (err) => {
+          console.error('Error creating permission:', err);
+          this.showErrorMessage('You already have access to this room reader.');
+          this.fetchData();
+        },
+      });
   }
 
   showModal() {
@@ -97,11 +152,21 @@ export class ProfileComponent {
         .findCardsByUser({ user_id: this.user.id.toString() })
         .subscribe({
           next: (cards) => {
-            this.cards = cards;
+            const cardsWithReaders = cards.map((card) => {
+              console.log('Perms:', this.perms);
+              const perms = this.perms.filter((perm) => perm.card === card.uid);
+              console.log('Perms:', perms);
+              const readers = this.roomReaders.filter(
+                (reader) =>
+                  !perms.some((perm) => perm.room_reader === reader.uid)
+              );
+              return { ...card, readers };
+            });
+
+            this.cards = cardsWithReaders;
             this.cards.forEach((card) => {
               this.cardMap[card.uid] = card.user;
             });
-            console.log('Card Map:', this.cardMap);
             resolve();
           },
           error: (err) => {
@@ -110,14 +175,6 @@ export class ProfileComponent {
           },
         });
     });
-  }
-
-  requestAccess() {
-    if (this.selectedCard) {
-      console.log('Requesting access for card:', this.selectedCard);
-    } else {
-      console.log('No card selected.');
-    }
   }
 
   fetchRoomReaders(): Promise<void> {
@@ -177,6 +234,22 @@ export class ProfileComponent {
     this.fetchCards()
       .then(() => this.fetchRoomReaders())
       .then(() => this.fetchEntryLogs(this.currentPage, 25));
+  }
+
+  // Display success message
+  private showSuccessMessage(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      panelClass: ['snackbar-success'],
+    });
+  }
+
+  // Display error message
+  private showErrorMessage(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      panelClass: ['snackbar-error'],
+    });
   }
 }
 

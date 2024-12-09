@@ -9,35 +9,32 @@
 <table>
   <thead>
     <tr>
-      <th>Status</th>
       <th>Card</th>
-      <th>Card ID</th>
       <th>Reader</th>
-      <th>Reader Name</th>
+      <th>Reader ID</th>
       <th>User ID</th>
       <th>User Name</th>
+      <th>Status</th>
       <th style="display: flex; justify-content: flex-end;">Actions</th>
     </tr>
   </thead>
   <tbody>
     <tr class="filter-row">
-      <td><input [(ngModel)]="filter.status" type="text" placeholder="Filter by Status" (change)="onFilterChange()"></td>
-      <td><input [(ngModel)]="filter.card" type="text" placeholder="Filter by Card" (change)="onFilterChange()"></td>
-      <td><input [(ngModel)]="filter.card_id" type="text" placeholder="Filter by Card ID" (change)="onFilterChange()"></td>
-      <td><input [(ngModel)]="filter.room_reader" type="text" placeholder="Filter by Reader ID" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.card_id" type="text" placeholder="Filter by Card" (change)="onFilterChange()"></td>
       <td><input [(ngModel)]="filter.room_reader_name" type="text" placeholder="Filter by Reader" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.room_reader" type="text" placeholder="Filter by Reader ID" (change)="onFilterChange()"></td>
       <td><input [(ngModel)]="filter.user_id" type="text" placeholder="Filter by User Id" (change)="onFilterChange()"></td>
       <td><input [(ngModel)]="filter.user_name" type="text" placeholder="Filter by User" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.status" type="text" placeholder="Filter by Status" (change)="onFilterChange()"></td>
       <td></td>
     </tr>
     <tr *ngFor="let perm of perms">
-      <td>{{ perm.status }}</td>
-      <td>{{ perm.card }}</td>
       <td>{{ perm.card_id }}</td>
-      <td>{{ perm.room_reader }}</td>
       <td>{{ perm.room_reader_name }}</td>
+      <td>{{ perm.room_reader }}</td>
       <td>{{ perm.user_id }}</td>
       <td>{{ perm.user_name }}</td>
+      <td>{{ perm.status }}</td>
       <td class="align-end" style="gap: 20px; display: flex; justify-content: flex-end;">
         <img src="./editing.png" alt="Edit Card" (click)="editPerm(perm); showModal();" title="Edit Card"
           style="width: 25px; height: 25px; cursor: pointer;">

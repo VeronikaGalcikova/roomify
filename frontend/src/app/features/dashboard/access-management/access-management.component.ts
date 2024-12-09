@@ -98,17 +98,23 @@ export class AccessManagementComponent implements OnInit {
 
   // Add a new card
   addPerm(newPerm: IAccessPermission): void {
-    this.permService.createAccessPermission(newPerm).subscribe({
-      next: () => {
-        this.loadPerms(this.currentPage, 25);
-        this.cancelEdit();
-        this.showSuccessMessage('Access permission added successfully!');
-      },
-      error: (error) => {
-        console.error('Error adding access permission:', error);
-        this.showErrorMessage('Failed to add access permission.');
-      },
-    });
+    this.permService
+      .createAccessPermission({
+        status: newPerm.status,
+        card: newPerm.card,
+        room_reader: newPerm.room_reader,
+      })
+      .subscribe({
+        next: () => {
+          this.loadPerms(this.currentPage, 25);
+          this.cancelEdit();
+          this.showSuccessMessage('Access permission added successfully!');
+        },
+        error: (error) => {
+          console.error('Error adding access permission:', error);
+          this.showErrorMessage('Failed to add access permission.');
+        },
+      });
   }
 
   // Edit an existing card
@@ -121,7 +127,7 @@ export class AccessManagementComponent implements OnInit {
   updatePerm(): void {
     if (this.selectedPerm) {
       this.permService
-        .updateAccessPermission({...this.selectedPerm})
+        .updateAccessPermission({ ...this.selectedPerm })
         .subscribe({
           next: () => {
             this.isEditing = false;
@@ -139,7 +145,7 @@ export class AccessManagementComponent implements OnInit {
 
   // Delete a card
   deletePerm(id: number): void {
-    this.permService.deleteAccessPermission({id}).subscribe({
+    this.permService.deleteAccessPermission({ id }).subscribe({
       next: () => {
         this.loadPerms(this.currentPage, 25);
         this.showSuccessMessage('Access permission deleted successfully!');
@@ -156,7 +162,7 @@ export class AccessManagementComponent implements OnInit {
     this.isEditing = false;
     this.selectedPerm = {
       id: 0,
-      status: '',
+      status: 'pending',
       card: '',
       card_id: '',
       room_reader: '',
