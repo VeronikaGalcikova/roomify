@@ -25,7 +25,20 @@
       <td><input [(ngModel)]="filter.room_reader" type="text" placeholder="Filter by Reader ID" (change)="onFilterChange()"></td>
       <td><input [(ngModel)]="filter.user_id" type="text" placeholder="Filter by User Id" (change)="onFilterChange()"></td>
       <td><input [(ngModel)]="filter.user_name" type="text" placeholder="Filter by User" (change)="onFilterChange()"></td>
-      <td><input [(ngModel)]="filter.status" type="text" placeholder="Filter by Status" (change)="onFilterChange()"></td>
+      <td><select [(ngModel)]="filter.status" (change)="onFilterChange()">
+        <option [value]="undefined">
+          All Statuses
+        </option>
+        <option [value]="'allowed'">
+          Allowed
+        </option>
+        <option [value]="'not_allowed'">
+          Not Allowed
+        </option>
+        <option [value]="'pending'">
+          Pending
+        </option>
+      </select></td>
       <td></td>
     </tr>
     <tr *ngFor="let perm of perms">
@@ -34,7 +47,11 @@
       <td>{{ perm.room_reader }}</td>
       <td>{{ perm.user_id }}</td>
       <td>{{ perm.user_name }}</td>
-      <td>{{ perm.status }}</td>
+      <td [ngClass]="{
+        'status-allowed': perm.status === 'allowed',
+        'status-not-allowed': perm.status === 'not_allowed',
+        'status-pending': perm.status === 'pending'
+      }">{{ perm.status === 'not_allowed' ? 'not allowed' : perm.status }}</td>
       <td class="align-end" style="gap: 20px; display: flex; justify-content: flex-end;">
         <img src="./editing.png" alt="Edit Card" (click)="editPerm(perm); showModal();" title="Edit Card"
           style="width: 25px; height: 25px; cursor: pointer;">
@@ -57,7 +74,7 @@
   <div *ngIf="isEditing || selectedPerm">
     <form (ngSubmit)="isEditing ? updatePerm() : addPerm(selectedPerm!)">
       <label>Status</label>
-      <select [(ngModel)]="selectedPerm!.status" name="status" [disabled]="isEditing" required>
+      <select [(ngModel)]="selectedPerm!.status" name="status" required>
         <option [value]="'allowed'">
           Allowed
         </option>
@@ -70,14 +87,14 @@
       </select>
 
       <label>Card</label>
-      <select [(ngModel)]="selectedPerm!.card_id" name="status" [disabled]="isEditing" required>
-        <option *ngFor="let card of cards" [value]="card.card_id">
+      <select [(ngModel)]="selectedPerm!.card" name="card" required>
+        <option *ngFor="let card of cards" [value]="card.uid">
           {{ card.card_id }}
         </option>
       </select>
 
       <label>Room Reader</label>
-      <select [(ngModel)]="selectedPerm!.room_reader" name="status" [disabled]="isEditing" required>
+      <select [(ngModel)]="selectedPerm!.room_reader" name="reader" style="margin-bottom: 15px;" required>
         <option *ngFor="let reader of readers" [value]="reader.uid">
           {{ reader.name }}
         </option>

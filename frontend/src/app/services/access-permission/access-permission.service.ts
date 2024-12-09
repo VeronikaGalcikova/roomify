@@ -50,9 +50,10 @@ export class AccessPermissionService {
   }
 
   updateAccessPermission(
+    id: number,
     updateAccessPermissionDto: IUpdateAccessPermissionDto
   ): Observable<IUpdateAccessPermissionResponse> {
-    const updateAccessPermissionUrl = `${this.apiUrl}${AccessPermissionRoutes.UPDATE_ACCESS_PERMISSION}`;
+    const updateAccessPermissionUrl = `${this.apiUrl}${AccessPermissionRoutes.UPDATE_ACCESS_PERMISSION}${id}/`;
     return this.http.put<IUpdateAccessPermissionResponse>(
       updateAccessPermissionUrl,
       updateAccessPermissionDto
@@ -62,7 +63,7 @@ export class AccessPermissionService {
   deleteAccessPermission(
     deleteAccessPermissionDto: IDeleteAccessPermissionDto
   ): Observable<IDeleteAccessPermissionResponse> {
-    const deleteAccessPermissionUrl = `${this.apiUrl}${AccessPermissionRoutes.DELETE_ACCESS_PERMISSION}${deleteAccessPermissionDto.id}`;
+    const deleteAccessPermissionUrl = `${this.apiUrl}${AccessPermissionRoutes.DELETE_ACCESS_PERMISSION}${deleteAccessPermissionDto.id}/`;
     return this.http.delete<IDeleteAccessPermissionResponse>(
       deleteAccessPermissionUrl
     );

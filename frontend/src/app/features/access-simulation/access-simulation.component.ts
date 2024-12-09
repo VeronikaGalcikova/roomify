@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { RoomReaderService } from '../../services/room-reader/room-reader.service';
 import { IRoomReader } from '../../shared/room-reader/get-all-room-readers.interface';
 import { AccessService } from '../../services/access/access.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-access-simulation',
@@ -21,10 +22,13 @@ export class AccessSimulationComponent {
   errorMessages: string[] = [];
   draggedCardId: string | null = null;
 
+  today = new Date();
+
   constructor(
     private cardService: CardService,
     private roomReaderService: RoomReaderService,
     private accessService: AccessService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -96,7 +100,7 @@ export class AccessSimulationComponent {
           next: (response) => {
             console.log('Access verified successfully!', response);
             if (response.access) {
-              alert('Access Granted!');
+              this.showSuccessMessage('Access Granted!');
               reader.accessGranted = true;
 
               // Reset accessGranted after a timeout
@@ -104,7 +108,7 @@ export class AccessSimulationComponent {
                 reader.accessGranted = null; // Reset after display
               }, 2000);
             } else {
-              alert('Access Denied!');
+                this.showSuccessMessage(`Access Denied! ${response?.detail ?? ''}`);
               reader.accessGranted = false;
 
               // Reset accessGranted after a timeout
@@ -126,6 +130,12 @@ export class AccessSimulationComponent {
           },
         });
     }
+  }
+  private showSuccessMessage(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      panelClass: ['snackbar-success'],
+    });
   }
 }
 

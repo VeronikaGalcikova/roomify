@@ -13,8 +13,10 @@ export interface IRoomEntryLog {
 export interface IFindEntryLogsByFilterDto {
     card_id?: string;
     user_id?: number;
+    user_name?: string;
     reader_id?: string;
-    type?: 'entry' | 'exit' | 'denied';
+    reader_name?: string;
+    log_type?: 'entry' | 'exit' | 'denied';
     page: number;
     limit: number;
 }

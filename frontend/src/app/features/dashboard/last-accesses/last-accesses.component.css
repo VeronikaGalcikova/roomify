@@ -104,9 +104,18 @@ table tr:last-child td:last-child {
   border-radius: 3px;
 }
 
-.filter-row input:focus {
+.filter-row input:focus, form input:focus, select:focus {
   outline: none;
   border-color: #1abc9c; /* Optional: Change border color on focus */
+}
+
+select {
+  min-width: 100px;
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  box-sizing: border-box;
 }
 
 

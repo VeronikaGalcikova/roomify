@@ -41,9 +41,11 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (!this.authService.isAdmin$) {
-      this.router.navigate(['access-simulation']);
-    }
+    this.authService.isAdmin$.subscribe((isAdmin) => {
+      if (!isAdmin) {
+        this.router.navigate(['/access-simulation']);
+      }
+    });
   }
 
   // Method to change the selected view

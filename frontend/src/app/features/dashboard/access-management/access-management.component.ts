@@ -27,13 +27,13 @@ export class AccessManagementComponent implements OnInit {
   isModalVisible = false;
 
   filter: IFilter = {
-    status: '',
     card: '',
     card_id: '',
     room_reader: '',
     room_reader_name: '',
     user_id: '',
     user_name: '',
+    status: undefined,
   };
   currentPage: number = 1;
 
@@ -84,16 +84,19 @@ export class AccessManagementComponent implements OnInit {
   }
 
   loadPerms(page: number, limit: number): void {
-    this.permService.findAccessPermissionsByFilter({ limit, page }).subscribe({
-      next: (perms) => {
-        this.perms = perms;
-      },
-      error: (error) => {
-        console.error('Error fetching cards:', error);
-        this.errorMessage = 'Failed to load access permissions.';
-        this.showErrorMessage('Failed to load access permissions.');
-      },
-    });
+    console.log('Filter:', this.filter);
+    this.permService
+      .findAccessPermissionsByFilter({ limit, page, ...this.filter })
+      .subscribe({
+        next: (perms) => {
+          this.perms = perms;
+        },
+        error: (error) => {
+          console.error('Error fetching cards:', error);
+          this.errorMessage = 'Failed to load access permissions.';
+          this.showErrorMessage('Failed to load access permissions.');
+        },
+      });
   }
 
   // Add a new card
@@ -121,13 +124,18 @@ export class AccessManagementComponent implements OnInit {
   editPerm(perm: IAccessPermission): void {
     this.isEditing = true;
     this.selectedPerm = { ...perm };
+    console.log('Selected Perm:', this.selectedPerm);
   }
 
   // Update card details
   updatePerm(): void {
     if (this.selectedPerm) {
       this.permService
-        .updateAccessPermission({ ...this.selectedPerm })
+        .updateAccessPermission(this.selectedPerm.id, {
+          card: this.selectedPerm.card,
+          room_reader: this.selectedPerm.room_reader,
+          status: this.selectedPerm.status,
+        })
         .subscribe({
           next: () => {
             this.isEditing = false;
@@ -201,17 +209,24 @@ export class AccessManagementComponent implements OnInit {
   }
 
   onFilterChange() {
+    if (
+      this.filter.status !== 'allowed' &&
+      this.filter.status !== 'not_allowed' &&
+      this.filter.status !== 'pending'
+    ) {
+      this.filter.status = undefined;
+    }
     this.currentPage = 1;
     this.loadPerms(1, 25);
   }
 }
 
 export interface IFilter {
-  status: string;
-  card: string;
-  card_id: string;
-  room_reader: string;
-  room_reader_name: string;
-  user_id: string;
-  user_name: string;
+  status?: 'allowed' | 'not_allowed' | 'pending' | undefined;
+  card?: string;
+  card_id?: string;
+  room_reader?: string;
+  room_reader_name?: string;
+  user_id?: string;
+  user_name?: string;
 }

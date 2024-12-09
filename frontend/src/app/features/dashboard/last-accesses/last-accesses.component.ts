@@ -41,11 +41,10 @@ export class LastAccessesComponent implements OnInit {
   
   filter: IFilter = {
     id: null,
-    username: '',
-    card_id: '',
-    reader_id: '',
+    user_name: '',
+    card_uid: '',
+    reader_uid: '',
     reader_name: '',
-    type: '',
   };
   currentPage: number = 1;
 
@@ -128,13 +127,16 @@ export class LastAccessesComponent implements OnInit {
   }
 
   fetchEntryLogs(page: number, limit: number): void {
-    this.roomEntryLogService.getEntryLogs().subscribe({
+    this.roomEntryLogService.findEntryLogsByFilter({
+      ...this.filter,
+      page,
+      limit,
+    }).subscribe({
       next: (logs) => {
-        console.log('Fetched Entry Logs:', logs);
         this.entryLogs = logs.map((log) => ({
           ...log,
           userid: this.cardMap[log.card],
-          readerid: log.reader, // Assuming log.reader is reader UID
+          readerid: log.reader,
         }));
       },
       error: (err) => {
@@ -172,9 +174,9 @@ export class LastAccessesComponent implements OnInit {
 
 export interface IFilter {
   id?: string | null;
-  card_id?: string;
-  username?: string;
-  reader_id?: string;
+  card_uid?: string;
+  user_name?: string;
+  reader_uid?: string;
   reader_name?: string;
-  type?: string;
+  log_type?: "entry" | "exit" | "denied" | undefined;
 }

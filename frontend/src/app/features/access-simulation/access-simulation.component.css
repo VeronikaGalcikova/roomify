@@ -177,6 +177,40 @@
   animation: fade-out 5s forwards;
 }
 
+.status-active {
+  color: #388e3c;
+}
+
+.status-active::before {
+  content: "";
+  display: inline-block;
+  width: 8px; /* Size of the dot */
+  height: 8px;
+  background-color: #388e3c;
+  border-radius: 50%; /* Makes it a circle */
+  margin-right: 8px; /* Space between dot and text */
+  vertical-align: middle; /* Align with text */
+}
+
+.status-inactive::before {
+  content: "";
+  display: inline-block;
+  width: 8px; /* Size of the dot */
+  height: 8px;
+  background-color: #f44336;
+  border-radius: 50%; /* Makes it a circle */
+  margin-right: 8px; /* Space between dot and text */
+  vertical-align: middle; /* Align with text */
+}
+
+.status-inactive {
+  color: #d32f2f;
+}
+
+.expired {
+  color: #d67900;
+}
+
 @keyframes fade-out {
   0% {
     opacity: 1;

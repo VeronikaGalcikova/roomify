@@ -21,7 +21,13 @@ export class LoginComponent {
   ngOnInit() {
     this.authService.isAuthenticated$.subscribe((authStatus) => {
       if (authStatus) {
-        this.router.navigate(['/dashboard']);
+        this.authService.isAdmin$.subscribe((isAdmin) => {
+          if (isAdmin) {
+            this.router.navigate(['/dashboard']);
+          } else {
+            this.router.navigate(['/access-simulation']);
+          }
+        });
       }
     });
   }

@@ -18,7 +18,7 @@
           <div class="card-content">
             <div>
               <h3>{{ card.card_id }}</h3>
-              <p>Status: {{ card.expiration_date ? 'Allowed' : 'Not Allowed' }}</p>
+                <p>{{ card.expiration_date | date }}</p>
             </div>
             <img src="./chip.png" alt="chip" class="chip-img">
           </div>
@@ -42,7 +42,9 @@
             <div>
               <h3>{{ reader.name }}</h3>
               <p>IP: {{ reader.ip }}</p>
-              <p>Status: {{ reader.active ? 'Active' : 'Inactive' }}</p>            
+                <div style="display: flex; gap: 12px;;">
+                <div [ngClass]="{ 'status-active': reader.active, 'status-inactive': !reader.active }">{{ reader.active ? 'Active' : 'Inactive' }}</div>
+                </div>
             </div>
             <img src="./pos-terminal.png" alt="terminal" class="terminal-img">
             <div class="reader-status-icon" 

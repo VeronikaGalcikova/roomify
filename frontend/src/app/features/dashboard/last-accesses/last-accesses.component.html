@@ -1,15 +1,15 @@
 <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 0 20px">
-  <h1>Last Accesses Management</h1>
+  <h1>Entry logs Management</h1>
   <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
 </div>
 <table>
   <thead>
     <tr>
       <th>ID</th>
-      <th>User's Card ID</th>
-      <th>User Name</th>
-      <th>Room Reader's ID</th>
-      <th>Room Reader's Name</th>
+      <th>Card Serial Number</th>
+      <th>User</th>
+      <th>Reader Serial Number</th>
+      <th>Reader</th>
       <th>Log Type</th>
       <th>Timestamp</th>
     </tr>
@@ -18,11 +18,28 @@
     <!-- Filter Row -->
     <tr class="filter-row">
       <td><input [(ngModel)]="filter.id" type="text" placeholder="Filter by ID" (change)="onFilterChange()"></td>
-      <td><input [(ngModel)]="filter.card_id" type="text" placeholder="Filter by Card ID" (change)="onFilterChange()"></td>
-      <td><input [(ngModel)]="filter.username" type="text" placeholder="Filter by Username" (change)="onFilterChange()"></td>
-      <td><input [(ngModel)]="filter.reader_id" type="text" placeholder="Filter by Reader ID" (change)="onFilterChange()"></td>
-      <td><input [(ngModel)]="filter.reader_name" type="text" placeholder="Filter by Reader Name" (change)="onFilterChange()"></td>
-      <td><input [(ngModel)]="filter.type" type="text" placeholder="Filter by Type" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.card_uid" type="text" placeholder="Filter by Card SN" (change)="onFilterChange()">
+      </td>
+      <td><input [(ngModel)]="filter.user_name" type="text" placeholder="Filter by User" (change)="onFilterChange()">
+      </td>
+      <td><input [(ngModel)]="filter.reader_uid" type="text" placeholder="Filter by Reader SN"
+          (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.reader_name" type="text" placeholder="Filter by Reader"
+          (change)="onFilterChange()"></td>
+      <td> <select [(ngModel)]="filter.log_type" (change)="onFilterChange()">
+          <option [value]="undefined">
+            All Types
+          </option>
+          <option [value]="'entry'">
+            Entry
+          </option>
+          <option [value]="'exit'">
+            Exit
+          </option>
+          <option [value]="'denied'">
+            Denied
+          </option>
+        </select></td>
       <td></td> <!-- Empty cell for the Actions column -->
     </tr>
     <tr *ngFor="let log of entryLogs">
@@ -40,8 +57,9 @@
 <!-- Pagination Controls -->
 <div class="pagination">
   <button class="pagination-button" (click)="changePage(1)">First</button>
-  <button  class="pagination-button" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Prev</button>
+  <button class="pagination-button" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Prev</button>
   <span style="font-size: 13px; color: rgb(110, 110, 110);">Page {{currentPage}}</span>
-  <button  class="pagination-button" (click)="changePage(currentPage + 1)" [disabled]="entryLogs.length !== 25">Next</button>
-  <button  class="pagination-button" (click)="changePage(-1)">Last</button>
+  <button class="pagination-button" (click)="changePage(currentPage + 1)"
+    [disabled]="entryLogs.length !== 25">Next</button>
+  <button class="pagination-button" (click)="changePage(-1)">Last</button>
 </div>

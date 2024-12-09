@@ -3,7 +3,7 @@ import { IAccessPermission } from "./access-permission.interface";
 export interface IFindAccessPermissionsByFilterDto {
     page: number;
     limit: number;
-    status?: string;
+    status?: 'allowed' | 'not_allowed' | 'pending' | undefined;
     card?: string;
     card_id?: string;
     room_reader?: string;
