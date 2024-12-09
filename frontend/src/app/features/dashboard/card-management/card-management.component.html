@@ -9,19 +9,21 @@
 <table>
   <thead>
     <tr>
-      <th>ID</th>
+      <th>Serial Number</th>
       <th>Card Name</th>
       <th>Expiration</th>
       <th>User ID</th>
+      <th>User</th>
       <th style="display: flex; justify-content: flex-end;">Actions</th>
     </tr>
   </thead>
   <tbody>
     <tr class="filter-row">
-      <td><input [(ngModel)]="filter.id" type="text" placeholder="Filter by ID" (change)="onFilterChange()"></td>
+      <td></td>
       <td><input [(ngModel)]="filter.card_id" type="text" placeholder="Filter by Name" (change)="onFilterChange()"></td>
       <td></td>
       <td><input [(ngModel)]="filter.user_id" type="text" placeholder="Filter by User ID" (change)="onFilterChange()"></td>
+      <td><input [(ngModel)]="filter.user_name" type="text" placeholder="Filter by User" (change)="onFilterChange()"></td>
       <td></td>
     </tr>
     <tr *ngFor="let card of cards">
@@ -29,6 +31,7 @@
       <td>{{ card.card_id }}</td>
       <td>{{ card.expiration_date | date: 'longDate' }}</td>
       <td>{{ card.user }}</td>
+      <td>{{ card.user_name }}</td>
       <td class="align-end" style="gap: 20px; display: flex; justify-content: flex-end;">
         <img src="./editing.png" alt="Edit Card" (click)="editCard(card); showModal();" title="Edit Card" style="width: 25px; height: 25px; cursor: pointer;">
         <img src="./bin.png" alt="Delete Card" (click)="deleteCard(card.uid);" title="Delete Card" style="width: 25px; height: 25px; cursor: pointer;">
@@ -67,24 +70,24 @@
       </option>
     </select>
 
-    <label>Card ID</label>
+    <label>Card Name</label>
     <input
       [(ngModel)]="selectedCard!.card_id"
       name="card_id"
-      type="number"
+      placeholder="Enter Card Name"
       required
     />
 
-    <!-- TODO: prerobit na exp -->
-    <label>Allowed</label>
-    <select [(ngModel)]="selectedCard!.expiration_date" name="allowed" required>
-      <option [ngValue]="true">Yes</option>
-      <option [ngValue]="false">No</option>
-    </select>
+    <label>Expiration Date</label>
+    <input
+      [(ngModel)]="selectedCard!.expiration_date"
+      name="expiration_date"
+      type="date"
+      required>
     <div style="display: flex; justify-content: space-between;">
       <button class="cancel-button" type="button" (click)="cancelEdit(); onModalClose()">Cancel</button>
       <button type="submit" (click)="onModalClose()" class="submit-button">
-        {{ isEditing ? 'Update Card ' + selectedCard!.card_id : 'Add Card' }}
+        {{ isEditing ? 'Update Card': 'Add Card' }}
       </button>
     </div>
   </form>

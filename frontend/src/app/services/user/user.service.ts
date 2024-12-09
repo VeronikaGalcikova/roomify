@@ -35,7 +35,7 @@ export class UserService {
 
   updateUser(userId: number, user: IUser): Observable<IUser> {
     const url = `${this.apiUrl}${UserRoutes.UPDATE_USER}/${userId}/`;
-    return this.http.put<IUser>(url, user);
+    return this.http.patch<IUser>(url, user);
   }
 
   deleteUser(userId: number): Observable<void> {

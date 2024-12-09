@@ -18,6 +18,14 @@ h1 {
   margin-bottom: 20px;
 }
 
+.reader-active {
+  color: green;
+}
+
+.reader-inactive {
+  color: red;
+}
+
 table {
   margin: 0;
   width: 100%;

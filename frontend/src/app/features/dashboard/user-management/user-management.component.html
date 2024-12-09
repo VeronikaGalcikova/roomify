@@ -75,13 +75,24 @@
       <label>Email</label>
       <input [(ngModel)]="selectedUser!.email" name="email" required placeholder="Enter email" />
 
+      @if (!isEditing) {
       <label>Password</label>
       <input [(ngModel)]="selectedUser!.password" name="password" type="password" required
-        placeholder="Enter password" />
+        placeholder="Enter password" />}
+
+      <label>Role</label>
+      <select name="role" [(ngModel)]="selectedUser.is_superuser" required>
+        <option [ngValue]="true">
+          Admin
+        </option>
+        <option [ngValue]="false" [selected]>
+          Basic
+        </option>
+      </select>
 
       <div style="display: flex; justify-content: space-between;">
         <button class="cancel-button" type="button" (click)="cancelEdit(); onModalClose()">Cancel</button>
-        <button type="submit" (click)="onModalClose()" class="submit-button">
+        <button type="submit" class="submit-button">
           {{ isEditing ? 'Update User ' : 'Add User' }}
         </button>
       </div>

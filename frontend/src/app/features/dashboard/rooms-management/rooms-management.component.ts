@@ -22,11 +22,12 @@ export class RoomsManagementComponent {
   isModalVisible = false;
   
   filter: IFilter = {
-    id: null,
     name: '',
     ip: '',
-    reader_state: '',
   };
+
+  active: boolean = false;
+  inactive: boolean = false;
   currentPage: number = 1;
 
   constructor(
@@ -37,7 +38,6 @@ export class RoomsManagementComponent {
   ngOnInit(): void {
     this.loadRoomReaders(1, 25);
   }
-
   
   showModal() {
     this.isModalVisible = true;
@@ -48,9 +48,9 @@ export class RoomsManagementComponent {
   }
 
   loadRoomReaders(page: number, limit: number): void {
-    this.roomReaderService.getAllRoomReaders().subscribe({
-      next: (readers: IRoomReader[]) => {
-        this.roomReaders = readers;
+    this.roomReaderService.findRoomReadersByFilter({...this.filter, page, limit}).subscribe({
+      next: (response) => {
+        this.roomReaders = response;
       },
       error: (error: any) => {
         console.error('Error fetching room readers:', error);
@@ -150,14 +150,33 @@ export class RoomsManagementComponent {
   }
 
   onFilterChange() {
+    console.log('act:', this.active, this.inactive);
     this.currentPage = 1;
+
+    if (this.active && this.inactive) {
+      this.filter.active = undefined;
+    }
+
+    else if (this.active) {
+      this.filter.active = true;
+    }
+
+    else if (this.inactive) {
+      this.filter.active = false;
+    }
+  
+    else {
+      this.filter.active = undefined;
+    }
+
+    console.log('filter:', this.filter);
+
     this.loadRoomReaders(1, 25);
   }
 }
 
 export interface IFilter {
-  id: string | null;
   name: string;
   ip: string;
-  reader_state: string;
+  active?: boolean;
 }

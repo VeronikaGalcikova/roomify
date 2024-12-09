@@ -1,8 +1,10 @@
 export interface IRoomEntryLog {
     id: number;
     card: string;
+    card_id: string;
     userid: number;
     reader: string;
+    reader_name: string;
     readerid: string;
     log_type: 'entry' | 'exit' | 'denied';
     timestamp: string;

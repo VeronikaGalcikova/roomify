@@ -59,7 +59,7 @@
                         <td></td> <!-- Empty cell for the Actions column -->
                     </tr>
                     <tr *ngFor="let log of entryLogs">
-                        <td>{{ log.card }}</td>
+                        <td>{{ log.card_id }}</td>
                         <td>{{ readerMap[log.readerid!] || "Unknown Reader" }}</td>
                         <td>{{ log.log_type }}</td>
                         <td>{{ log.timestamp | date : "short" }}</td>

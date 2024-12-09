@@ -24,9 +24,10 @@ export class CardManagementComponent implements OnInit {
   isModalVisible = false;
 
   filter: IFilter = {
-    id: null,
+    user_id: undefined,
+    user_name: '',
     card_id: '',
-    user_id: '',
+    card_uid: '',
   };
   currentPage: number = 1;
 
@@ -50,14 +51,18 @@ export class CardManagementComponent implements OnInit {
   }
 
   loadCards(page: number, limit: number): void {
-    this.cardService.getAllCards().subscribe({
+    this.cardService.findCardsByFilter({...this.filter, page, limit}).subscribe({
       next: (cards) => {
-        this.cards = cards;
+      this.cards = cards.map(card => ({
+        ...card,
+        expiration_date: new Date(card.expiration_date).toISOString().split('T')[0]
+      }));
+      console.log('Loaded Cards:', this.cards); // Add this line
       },
       error: (error) => {
-        console.error('Error fetching cards:', error);
-        this.errorMessage = 'Failed to load cards.';
-        this.showErrorMessage('Failed to load cards.');
+      console.error('Error fetching cards:', error);
+      this.errorMessage = 'Failed to load cards.';
+      this.showErrorMessage('Failed to load cards.');
       },
     });
   }
@@ -78,11 +83,6 @@ export class CardManagementComponent implements OnInit {
 
   // Add a new card
   addCard(newCard: ICard): void {
-    const cardData = {
-      card_id: newCard.card_id,
-      allowed: newCard.expiration_date,
-      user: newCard.user, // Ensure 'user' is selected from existing users
-    };
     this.cardService.createCard(newCard).subscribe({
       next: () => {
         this.loadCards(this.currentPage, 25);
@@ -139,7 +139,7 @@ export class CardManagementComponent implements OnInit {
   // Initialize for adding a new card
   initiateAddCard(): void {
     this.isEditing = false;
-    this.selectedCard = { card_id: '', expiration_date: '', user: 0 } as ICard;
+    this.selectedCard = { card_id: '', expiration_date: '2025-12-31', user: 1 } as ICard;
   }
 
   // Cancel add/edit operation
@@ -177,7 +177,8 @@ export class CardManagementComponent implements OnInit {
 }
 
 export interface IFilter {
-  id?: string | null;
+  user_id?: number;
+  user_name?: string;
   card_id?: string;
-  user_id?: string;
+  card_uid?: string;
 }

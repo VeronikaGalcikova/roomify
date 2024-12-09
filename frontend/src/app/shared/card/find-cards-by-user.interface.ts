@@ -9,4 +9,5 @@ export interface ICard {
   card_id: string;
   expiration_date: string;
   user: number;
+  user_name: string;
 }
