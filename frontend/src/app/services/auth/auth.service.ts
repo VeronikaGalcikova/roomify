@@ -7,6 +7,7 @@ import { API_URL } from '../../app.config';
 import { IRegistrationDto, IRegistrationResponse } from '../../shared/auth/registration.interface';
 import { IJWTdata } from '../../shared/auth/jwt.interface';
 import { IRefreshResponse } from '../../shared/auth/refresh.interface';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,8 @@ export class AuthService {
   userId$ = new BehaviorSubject<number | null>(null);
   userIdSubject$ = this.userId$.asObservable();
   
-  constructor(private http: HttpClient, @Inject(API_URL) private apiUrl: string) {
+  constructor(private http: HttpClient, @Inject(API_URL) private apiUrl: string,     private router: Router,
+) {
     this.refreshAuthStatus();
   }
 
@@ -64,6 +66,7 @@ export class AuthService {
     localStorage.removeItem('refreshToken');
     this.isAuthenticatedSubject.next(false);
     this.isAdminSubject$.next(false);
+    this.router.navigate(['/login']);
   }
 
   refreshToken(): Observable<IRefreshResponse | null> {
